@@ -1,0 +1,81 @@
+<div class="page-header">
+  <div>
+    <h1 class="page-title">👥 전체 회원 조회</h1>
+    <p class="page-subtitle">가입한 모든 회원의 목록입니다</p>
+  </div>
+  <button class="btn btn-primary" id="btn-export">📥 CSV 내보내기</button>
+</div>
+
+<div class="search-box">
+  <input type="text" id="search-input" placeholder="🔍 이름, 아이디, 전화번호로 검색...">
+  <button class="btn btn-secondary" id="btn-filter">필터</button>
+</div>
+
+<div class="card" style="padding: 0;">
+  <table class="data-table" id="members-table">
+    <thead>
+      <tr>
+        <td>ID</td>
+        <td>아이디</td>
+        <td>이름</td>
+        <td>지역</td>
+        <td>가입일</td>
+        <td>등급</td>
+        <td>상태</td>
+        <td>액션</td>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>#2247</td>
+        <td>jinho_88</td>
+        <td>이진호</td>
+        <td>서울 강남</td>
+        <td>2026-09-15</td>
+        <td><span class="badge gold">VIP</span></td>
+        <td><span class="badge success">활성</span></td>
+        <td><button class="btn btn-sm btn-secondary">상세</button></td>
+      </tr>
+      <tr>
+        <td>#2246</td>
+        <td>miyoung_09</td>
+        <td>박미영</td>
+        <td>부산 해운대</td>
+        <td>2026-09-14</td>
+        <td><span class="badge gold">VIP</span></td>
+        <td><span class="badge success">활성</span></td>
+        <td><button class="btn btn-sm btn-secondary">상세</button></td>
+      </tr>
+      <tr>
+        <td>#2245</td>
+        <td>hyunwoo_1234</td>
+        <td>김현우</td>
+        <td>서울 강북</td>
+        <td>2026-09-14</td>
+        <td>일반</td>
+        <td><span class="badge warning">대기</span></td>
+        <td><button class="btn btn-sm btn-secondary">상세</button></td>
+      </tr>
+      <tr>
+        <td>#2244</td>
+        <td>sujin_love</td>
+        <td>정수진</td>
+        <td>대구 수성</td>
+        <td>2026-09-13</td>
+        <td>일반</td>
+        <td><span class="badge success">활성</span></td>
+        <td><button class="btn btn-sm btn-secondary">상세</button></td>
+      </tr>
+      <tr>
+        <td>#2243</td>
+        <td>daeho_kim</td>
+        <td>김대호</td>
+        <td>경기 성남</td>
+        <td>2026-09-13</td>
+        <td>일반</td>
+        <td><span class="badge error">정지</span></td>
+        <td><button class="btn btn-sm btn-secondary">상세</button></td>
+      </tr>
+    </tbody>
+  </table>
+</div>

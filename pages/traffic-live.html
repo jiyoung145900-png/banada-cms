@@ -1,0 +1,191 @@
+<!-- ═══════════════════════════════════════════════
+     실시간 데이터 - BANADA 스타일 편집 대시보드
+     ═══════════════════════════════════════════════ -->
+
+<div class="rtd-layout">
+  <!-- ─────────── 왼쪽: 데이터 영역 ─────────── -->
+  <div class="rtd-main">
+
+    <!-- 상단 서브 메뉴 -->
+    <div class="rtd-submenu" id="rtdSubmenu">
+      <button class="rtd-submenu-item active">BANADA 전국 프레스티지 서비스</button>
+      <button class="rtd-submenu-item">VIP 회원 전용 통합 매니지먼트</button>
+      <button class="rtd-submenu-item">BANADA 회원 전용룸</button>
+    </div>
+
+    <!-- 상단 공지 문구 -->
+    <div class="rtd-notice-top" id="rtdNoticeTop">
+      당신의 취향을 공유하며, 뜨거운 교감을 나눌 은밀한 파트너.
+      은밀한 만남을 통해 최상의 만족감을 경험하세요.
+    </div>
+
+    <!-- 타이틀 -->
+    <h1 class="rtd-title">실시간 데이터 현황</h1>
+
+    <!-- 데이터 테이블 -->
+    <div class="rtd-table-wrap">
+      <div id="selectionBox"></div>
+      <table class="rtd-table" id="rtdTable">
+        <thead>
+          <tr>
+            <td contenteditable="true">번호</td>
+            <td contenteditable="true">선택 유형</td>
+            <td contenteditable="true">포인트 금액</td>
+            <td contenteditable="true">환불 금액</td>
+            <td contenteditable="true">정확도</td>
+            <td contenteditable="true">데이터 상태</td>
+            <td contenteditable="true">서비스</td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td contenteditable="true" class="cell-num">1</td>
+            <td contenteditable="true" class="cell-select">선택 가능</td>
+            <td contenteditable="true">120,000</td>
+            <td contenteditable="true">250,000</td>
+            <td contenteditable="true">100%</td>
+            <td contenteditable="true">정상</td>
+            <td contenteditable="true" class="cell-sold">매진</td>
+          </tr>
+          <tr>
+            <td contenteditable="true" class="cell-num">2</td>
+            <td contenteditable="true" class="cell-select">선택 가능</td>
+            <td contenteditable="true">230,000</td>
+            <td contenteditable="true">276,000</td>
+            <td contenteditable="true">100%</td>
+            <td contenteditable="true">정상</td>
+            <td contenteditable="true" class="cell-sold">매진</td>
+          </tr>
+          <tr>
+            <td contenteditable="true" class="cell-num">3</td>
+            <td contenteditable="true" class="cell-select">선택 가능</td>
+            <td contenteditable="true">570,000</td>
+            <td contenteditable="true">584,000</td>
+            <td contenteditable="true">100%</td>
+            <td contenteditable="true">정상</td>
+            <td contenteditable="true" class="cell-sold">매진</td>
+          </tr>
+          <tr>
+            <td contenteditable="true" class="cell-num">4</td>
+            <td contenteditable="true" class="cell-select">선택 가능</td>
+            <td contenteditable="true">730,000</td>
+            <td contenteditable="true">876,000</td>
+            <td contenteditable="true">100%</td>
+            <td contenteditable="true">정상</td>
+            <td contenteditable="true" class="cell-sold">매진</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 하단 공지 -->
+    <div class="rtd-notice-bottom" id="rtdNoticeBottom">
+      <b>[중요 공지]</b> 업무 진행 중 핵심 정보를 누락하는 일이 없도록 담당자의 지시에 따라 신중하게 처리하시기 바랍니다.<br>
+      개별 업무 처리로 발생하는 모든 결과 책임은 당사자에게 귀속됩니다. 진행 상황은 시스템에 실시간 반영되오니, 항상 확인하여 주십시오.
+    </div>
+  </div>
+
+  <!-- ─────────── 오른쪽: 도구 패널 ─────────── -->
+  <aside class="rtd-tools" id="rtdTools">
+    <div class="rtd-tools-header">
+      <span>🛠️ 편집 도구</span>
+      <button class="rtd-tools-toggle" id="rtdToolsToggle" title="접기/펼치기">◀</button>
+    </div>
+
+    <div class="rtd-tools-body">
+      <!-- 사용법 -->
+      <div class="rtd-tools-hint">
+        <b>💡 사용법</b>
+        <p>1. 셀 <b>클릭</b> → 바로 편집</p>
+        <p>2. <span style="color:#29b6f6;">Ctrl/Cmd + 드래그</span> → 여러 셀 선택 후 스타일 적용</p>
+      </div>
+
+      <!-- Undo/Redo -->
+      <div class="rtd-tool-section">
+        <div class="rtd-tool-row">
+          <button class="rtd-btn primary" id="rtdUndoBtn" disabled title="Ctrl+Z">↶ 되돌리기</button>
+          <button class="rtd-btn primary" id="rtdRedoBtn" disabled title="Ctrl+Y">↷ 다시 실행</button>
+        </div>
+      </div>
+
+      <!-- 색상 -->
+      <div class="rtd-tool-section">
+        <div class="rtd-tool-label">🎨 색상 적용</div>
+        <div class="rtd-radio-row">
+          <label><input type="radio" name="rtdColorTarget" value="text" checked> 글자색</label>
+          <label><input type="radio" name="rtdColorTarget" value="background"> 배경색</label>
+        </div>
+        <div class="rtd-palette" id="rtdPalette"></div>
+      </div>
+
+      <!-- 폰트 크기 -->
+      <div class="rtd-tool-section">
+        <div class="rtd-tool-label">📏 글꼴 크기</div>
+        <div class="rtd-tool-row">
+          <input type="number" id="rtdFontSize" min="8" max="48" value="14" class="rtd-input">
+          <button class="rtd-btn" id="rtdApplyFont">적용</button>
+        </div>
+      </div>
+
+      <!-- 문구 편집 -->
+      <div class="rtd-tool-section">
+        <div class="rtd-tool-label">✏️ 문구 편집</div>
+        <label class="rtd-mini-label">상단 문구</label>
+        <textarea id="rtdEditTop" rows="2" class="rtd-input rtd-textarea"></textarea>
+        <label class="rtd-mini-label">하단 공지</label>
+        <textarea id="rtdEditBottom" rows="3" class="rtd-input rtd-textarea"></textarea>
+        <button class="rtd-btn rtd-btn-full rtd-btn-accent" id="rtdApplyText">문구 적용</button>
+      </div>
+
+      <!-- 행/열 -->
+      <div class="rtd-tool-section">
+        <div class="rtd-tool-label">📊 행 · 열</div>
+        <div class="rtd-tool-row">
+          <button class="rtd-btn" id="rtdAddRow">+ 행 추가</button>
+          <button class="rtd-btn" id="rtdAddCol">+ 열 추가</button>
+        </div>
+        <div class="rtd-tool-row" style="margin-top: 6px;">
+          <button class="rtd-btn rtd-btn-danger" id="rtdDelRow">− 행 삭제</button>
+          <button class="rtd-btn rtd-btn-danger" id="rtdDelCol">− 열 삭제</button>
+        </div>
+        <button class="rtd-btn rtd-btn-full" id="rtdAutoFit" style="margin-top: 6px; background: #29b6f6; color: #fff;">
+          🔄 열 너비 자동 맞춤
+        </button>
+      </div>
+
+      <!-- 클립보드 -->
+      <div class="rtd-tool-section">
+        <div class="rtd-tool-label">📋 클립보드</div>
+        <div class="rtd-tool-row">
+          <button class="rtd-btn" id="rtdCopy">📄 복사</button>
+          <button class="rtd-btn" id="rtdPaste">📥 붙여넣기</button>
+        </div>
+      </div>
+
+      <!-- 저장 -->
+      <div class="rtd-tool-section">
+        <div class="rtd-tool-label">
+          💾 저장 <span id="rtdSaveStatus"></span>
+        </div>
+        <div class="rtd-tool-row">
+          <button class="rtd-btn" id="rtdAutoSaveToggle" style="background: #4CAF50; color: #fff;">자동저장: ON</button>
+          <button class="rtd-btn" id="rtdSaveNow">즉시 저장</button>
+        </div>
+        <button class="rtd-btn rtd-btn-full rtd-btn-danger" id="rtdReset" style="margin-top: 6px;">
+          🗑️ 저장 데이터 초기화
+        </button>
+      </div>
+
+      <!-- 다운로드 -->
+      <div class="rtd-tool-section">
+        <div class="rtd-tool-label">📸 이미지 저장</div>
+        <button class="rtd-btn rtd-btn-full rtd-btn-accent" id="rtdDlSelection">
+          🖼️ 선택 영역 다운로드
+        </button>
+        <button class="rtd-btn rtd-btn-full rtd-btn-accent" id="rtdDlFull" style="margin-top: 6px;">
+          🖼️ 전체 화면 다운로드
+        </button>
+      </div>
+    </div>
+  </aside>
+</div>

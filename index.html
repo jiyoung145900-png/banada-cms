@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BANADA 데이터 센터</title>
+
+  <link rel="icon" type="image/webp" href="assets/logo.webp">
+  <link rel="stylesheet" href="css/common.css">
+</head>
+<body>
+
+<div class="app">
+  <!-- ─────────── 사이드바 ─────────── -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <img src="assets/logo.webp" alt="BANADA">
+      <div class="brand-text">
+        <span class="brand-name">BANADA</span>
+        <span class="brand-sub">DATA CENTER</span>
+      </div>
+    </div>
+    <nav class="sidebar-menu" id="sidebar-menu">
+      <!-- 메뉴는 JS(router.js)가 렌더링 -->
+    </nav>
+  </aside>
+
+  <!-- ─────────── 메인 영역 ─────────── -->
+  <main class="main">
+    <div class="topbar">
+      <div class="breadcrumb" id="breadcrumb">
+        <!-- 브레드크럼 - 라우터가 렌더링 -->
+      </div>
+      <div class="topbar-actions">
+        <div class="topbar-time" id="topbar-time">--:--:--</div>
+        <span class="admin-badge">관리자</span>
+      </div>
+    </div>
+
+    <div class="page-content" id="app-content">
+      <!-- 페이지 콘텐츠 - 라우터가 pages/*.html을 fetch -->
+      <div class="loading">🔧 초기화 중...</div>
+    </div>
+  </main>
+</div>
+
+<!-- 토스트 컨테이너 (toast.js가 자동 생성) -->
+
+<!-- ─────────── 앱 진입점 ─────────── -->
+<script type="module" src="js/app.js"></script>
+
+</body>
+</html>

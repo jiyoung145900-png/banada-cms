@@ -1,0 +1,105 @@
+<div class="page-header">
+  <div>
+    <h1 class="page-title">📊 메인 대시보드</h1>
+    <p class="page-subtitle">BANADA 데이터 센터에 오신 것을 환영합니다</p>
+  </div>
+</div>
+
+<!-- KPI 카드 -->
+<div class="kpi-grid">
+  <div class="kpi-card">
+    <div class="kpi-label">전체 회원</div>
+    <div class="kpi-value">2,247</div>
+    <div class="kpi-change up">▲ 오늘 +38</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-label">활성 매칭</div>
+    <div class="kpi-value">89</div>
+    <div class="kpi-change up">▲ 실시간 +12</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-label">신규 가입 대기</div>
+    <div class="kpi-value">17</div>
+    <div class="kpi-change down">▼ 어제 -3</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-label">오늘 매출</div>
+    <div class="kpi-value">₩4.2M</div>
+    <div class="kpi-change up">▲ 어제 대비 +18%</div>
+  </div>
+</div>
+
+<!-- 최근 활동 -->
+<div class="card">
+  <h2 class="card-title">📌 최근 활동</h2>
+  <table class="data-table">
+    <thead>
+      <tr>
+        <td>시간</td>
+        <td>유형</td>
+        <td>내용</td>
+        <td>상태</td>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>방금 전</td>
+        <td>신규 가입</td>
+        <td>회원 <b>jinho_88</b>님이 가입했습니다</td>
+        <td><span class="badge success">완료</span></td>
+      </tr>
+      <tr>
+        <td>2분 전</td>
+        <td>매칭 요청</td>
+        <td>강남 지역 VIP 매칭 요청 · <b>1건</b></td>
+        <td><span class="badge warning">대기</span></td>
+      </tr>
+      <tr>
+        <td>5분 전</td>
+        <td>결제</td>
+        <td>회원 <b>miyoung_09</b>님 · 프리미엄 결제 ₩450,000</td>
+        <td><span class="badge success">완료</span></td>
+      </tr>
+      <tr>
+        <td>12분 전</td>
+        <td>시스템</td>
+        <td>DeepL 번역 API 사용량 · 15% 도달</td>
+        <td><span class="badge info">정상</span></td>
+      </tr>
+      <tr>
+        <td>30분 전</td>
+        <td>문의</td>
+        <td>회원 <b>hyunwoo_1234</b>님 · 환불 문의</td>
+        <td><span class="badge error">미처리</span></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- 빠른 통계 -->
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+  <div class="card">
+    <h2 class="card-title">🗺 지역별 매칭 요청 (오늘)</h2>
+    <table class="data-table">
+      <tbody>
+        <tr><td>서울 강남</td><td style="text-align: right;"><b>32건</b></td></tr>
+        <tr><td>서울 강북</td><td style="text-align: right;"><b>18건</b></td></tr>
+        <tr><td>경기 남부</td><td style="text-align: right;"><b>14건</b></td></tr>
+        <tr><td>부산</td><td style="text-align: right;"><b>9건</b></td></tr>
+        <tr><td>대구</td><td style="text-align: right;"><b>5건</b></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="card">
+    <h2 class="card-title">⚡ 시스템 상태</h2>
+    <table class="data-table">
+      <tbody>
+        <tr><td>웹 서버</td><td><span class="badge success">정상</span></td></tr>
+        <tr><td>Firestore</td><td><span class="badge success">정상</span></td></tr>
+        <tr><td>Cloudinary</td><td><span class="badge success">정상</span></td></tr>
+        <tr><td>DeepL API</td><td><span class="badge success">정상</span></td></tr>
+        <tr><td>Vercel 배포</td><td><span class="badge success">정상</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
