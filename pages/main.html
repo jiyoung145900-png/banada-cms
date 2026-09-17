@@ -1,162 +1,538 @@
 <!-- ═══════════════════════════════════════════════
-     BANADA 데이터 센터 - 메인 대시보드 (럭셔리 리디자인)
+     BANADA 메인 대시보드 - 미니멀 실용형
      ═══════════════════════════════════════════════ -->
 
-<!-- 환영 헤더 -->
-<div class="page-header">
-  <div>
-    <div style="font-size: 11px; color: var(--accent-rose); letter-spacing: 3px; font-weight: 700; margin-bottom: 6px;">DASHBOARD</div>
-    <h1 class="page-title">BANADA 데이터 센터</h1>
-    <p class="page-subtitle">✨ 실시간 프리미엄 매칭 현황 · 오늘도 좋은 하루 되세요</p>
+<div id="mainDashboard">
+
+  <!-- 상단: 인사말 + 날짜 -->
+  <div class="page-header">
+    <div>
+      <div style="font-size: 11px; color: var(--accent-rose); letter-spacing: 2px; font-weight: 700; margin-bottom: 4px;" id="greetingLabel">GOOD MORNING</div>
+      <h1 class="page-title">환영합니다, 관리자님</h1>
+      <p class="page-subtitle" id="greetingSubtitle">오늘 확인해야 할 항목 <b style="color: var(--accent-gold);">4가지</b>가 있습니다.</p>
+    </div>
+    <div style="text-align: right;">
+      <div style="font-size: 10px; color: var(--text-muted); letter-spacing: 1.5px; margin-bottom: 4px;">TODAY</div>
+      <div style="font-size: 15px; color: var(--accent-gold); font-weight: 600;" id="mainDateBadge"></div>
+      <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;" id="mainWeekBadge"></div>
+    </div>
   </div>
-  <div style="text-align: right;">
-    <div style="font-size: 11px; color: var(--text-muted); letter-spacing: 1px;">TODAY</div>
-    <div style="font-size: 18px; color: var(--accent-gold); font-weight: 700; margin-top: 4px;" id="mainDateBadge"></div>
+
+  <!-- ═════════════ 오늘의 액션 아이템 ═════════════ -->
+  <div style="margin-bottom: 24px;">
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+      <div style="font-size: 12px; color: var(--text-muted); letter-spacing: 1.5px; font-weight: 700; text-transform: uppercase;">
+        <span style="color: var(--accent-gold); margin-right: 6px;">◆</span>즉시 처리 필요
+      </div>
+      <div style="font-size: 11px; color: var(--text-muted);">클릭하면 해당 페이지로 이동</div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px;">
+
+      <!-- 미처리 문의 -->
+      <a href="#page=inquiries" class="action-card action-urgent">
+        <div class="action-icon">💬</div>
+        <div class="action-content">
+          <div class="action-count">5</div>
+          <div class="action-label">미처리 문의</div>
+          <div class="action-desc">가장 오래된 <b>2시간 전</b></div>
+        </div>
+      </a>
+
+      <!-- 회원 승인 대기 -->
+      <a href="#page=members-approve" class="action-card action-warning">
+        <div class="action-icon">👤</div>
+        <div class="action-content">
+          <div class="action-count">17</div>
+          <div class="action-label">가입 승인 대기</div>
+          <div class="action-desc">신규 <b>+3</b> 오늘</div>
+        </div>
+      </a>
+
+      <!-- 최근 오류 -->
+      <a href="#page=error-logs" class="action-card action-danger">
+        <div class="action-icon">⚠</div>
+        <div class="action-content">
+          <div class="action-count">2</div>
+          <div class="action-label">발생 오류</div>
+          <div class="action-desc">최근 <b>30분</b> 이내</div>
+        </div>
+      </a>
+
+      <!-- 전국 만남 대기 -->
+      <a href="#page=region-requests" class="action-card action-info">
+        <div class="action-icon">🗺</div>
+        <div class="action-content">
+          <div class="action-count">8</div>
+          <div class="action-label">지역 매칭 대기</div>
+          <div class="action-desc">강남 <b>3</b> · 강북 <b>2</b> · 기타 <b>3</b></div>
+        </div>
+      </a>
+
+    </div>
+  </div>
+
+  <!-- ═════════════ KPI 통계 카드 ═════════════ -->
+  <div style="margin-bottom: 24px;">
+    <div style="font-size: 12px; color: var(--text-muted); letter-spacing: 1.5px; font-weight: 700; text-transform: uppercase; margin-bottom: 12px;">
+      <span style="color: var(--accent-gold); margin-right: 6px;">◇</span>오늘 현황
+    </div>
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-label">전체 회원</div>
+        <div class="kpi-value">2,247</div>
+        <div class="kpi-change up">▲ +38 오늘</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">VIP 회원</div>
+        <div class="kpi-value">89</div>
+        <div class="kpi-change up">▲ +2 오늘</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">활성 매칭</div>
+        <div class="kpi-value">142</div>
+        <div class="kpi-change up">▲ +12 실시간</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">오늘 매출</div>
+        <div class="kpi-value">₩4.2M</div>
+        <div class="kpi-change up">▲ +18% 어제 대비</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═════════════ 실시간 활동 + 지역별 현황 (2단) ═════════════ -->
+  <div style="display: grid; grid-template-columns: 1.4fr 1fr; gap: 18px; margin-bottom: 24px;">
+
+    <!-- 실시간 활동 피드 -->
+    <div class="card">
+      <h2 class="card-title">
+        <span style="color: var(--accent-gold);">◈</span>
+        실시간 활동
+        <span style="margin-left: auto; font-size: 10px; color: var(--accent-green); font-weight: 600; letter-spacing: 1px;">● LIVE</span>
+      </h2>
+      <div class="activity-feed">
+        <div class="activity-item">
+          <div class="activity-time">방금 전</div>
+          <div class="activity-tag tag-green">가입</div>
+          <div class="activity-text">회원 <b>jinho_88</b>님이 가입했습니다</div>
+        </div>
+        <div class="activity-item">
+          <div class="activity-time">2분 전</div>
+          <div class="activity-tag tag-gold">매칭</div>
+          <div class="activity-text">강남 지역 VIP 매칭 요청 · <b>1건</b></div>
+        </div>
+        <div class="activity-item">
+          <div class="activity-time">5분 전</div>
+          <div class="activity-tag tag-green">결제</div>
+          <div class="activity-text">회원 <b>miyoung_09</b>님 · 프리미엄 <b>₩450,000</b></div>
+        </div>
+        <div class="activity-item">
+          <div class="activity-time">12분 전</div>
+          <div class="activity-tag tag-blue">시스템</div>
+          <div class="activity-text">DeepL API 사용량 <b>15%</b> 도달</div>
+        </div>
+        <div class="activity-item">
+          <div class="activity-time">30분 전</div>
+          <div class="activity-tag tag-red">문의</div>
+          <div class="activity-text">회원 <b>hyunwoo_1234</b>님 · 환불 문의</div>
+        </div>
+        <div class="activity-item">
+          <div class="activity-time">1시간 전</div>
+          <div class="activity-tag tag-green">가입</div>
+          <div class="activity-text">회원 <b>sunny_star</b>님이 가입했습니다</div>
+        </div>
+        <div class="activity-item">
+          <div class="activity-time">1시간 전</div>
+          <div class="activity-tag tag-gold">매칭</div>
+          <div class="activity-text">매칭 성사 · <b>다혜님 ↔ 준호님</b></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 지역별 매칭 -->
+    <div class="card">
+      <h2 class="card-title">
+        <span style="color: var(--accent-gold);">◇</span>
+        지역별 매칭 요청
+        <span style="margin-left: auto; font-size: 10px; color: var(--text-muted); font-weight: 600; letter-spacing: 1px;">TODAY</span>
+      </h2>
+      <div class="region-list">
+        <div class="region-item">
+          <div class="region-rank">1</div>
+          <div class="region-name">서울 강남</div>
+          <div class="region-bar"><div class="region-fill" style="width: 100%;"></div></div>
+          <div class="region-count">32</div>
+        </div>
+        <div class="region-item">
+          <div class="region-rank">2</div>
+          <div class="region-name">서울 강북</div>
+          <div class="region-bar"><div class="region-fill" style="width: 56%;"></div></div>
+          <div class="region-count">18</div>
+        </div>
+        <div class="region-item">
+          <div class="region-rank">3</div>
+          <div class="region-name">경기 남부</div>
+          <div class="region-bar"><div class="region-fill" style="width: 44%;"></div></div>
+          <div class="region-count">14</div>
+        </div>
+        <div class="region-item">
+          <div class="region-rank">4</div>
+          <div class="region-name">부산</div>
+          <div class="region-bar"><div class="region-fill" style="width: 28%;"></div></div>
+          <div class="region-count">9</div>
+        </div>
+        <div class="region-item">
+          <div class="region-rank">5</div>
+          <div class="region-name">대구</div>
+          <div class="region-bar"><div class="region-fill" style="width: 16%;"></div></div>
+          <div class="region-count">5</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═════════════ 빠른 링크 + 시스템 상태 (2단) ═════════════ -->
+  <div style="display: grid; grid-template-columns: 1.4fr 1fr; gap: 18px;">
+
+    <!-- 빠른 링크 -->
+    <div class="card">
+      <h2 class="card-title">
+        <span style="color: var(--accent-gold);">◉</span>
+        빠른 이동
+      </h2>
+      <div class="quick-links">
+        <a href="#page=members-all" class="quick-link">
+          <span class="ql-icon">👥</span>
+          <span class="ql-text">전체 회원</span>
+          <span class="ql-arrow">→</span>
+        </a>
+        <a href="#page=members-vip" class="quick-link">
+          <span class="ql-icon">⭐</span>
+          <span class="ql-text">VIP 회원</span>
+          <span class="ql-arrow">→</span>
+        </a>
+        <a href="#page=revenue" class="quick-link">
+          <span class="ql-icon">💰</span>
+          <span class="ql-text">매출 관리</span>
+          <span class="ql-arrow">→</span>
+        </a>
+        <a href="#page=points" class="quick-link">
+          <span class="ql-icon">🪙</span>
+          <span class="ql-text">포인트 조회</span>
+          <span class="ql-arrow">→</span>
+        </a>
+        <a href="#page=traffic-live" class="quick-link">
+          <span class="ql-icon">📊</span>
+          <span class="ql-text">실시간 데이터</span>
+          <span class="ql-arrow">→</span>
+        </a>
+        <a href="#page=settings" class="quick-link">
+          <span class="ql-icon">⚙</span>
+          <span class="ql-text">설정</span>
+          <span class="ql-arrow">→</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- 시스템 상태 -->
+    <div class="card">
+      <h2 class="card-title">
+        <span style="color: var(--accent-gold);">◈</span>
+        시스템 상태
+        <span style="margin-left: auto; font-size: 10px; color: var(--accent-green); font-weight: 600; letter-spacing: 1px;">● ALL OK</span>
+      </h2>
+      <div class="system-list">
+        <div class="system-item">
+          <span class="system-dot dot-green"></span>
+          <span class="system-name">웹 서버</span>
+          <span class="system-status">정상</span>
+        </div>
+        <div class="system-item">
+          <span class="system-dot dot-green"></span>
+          <span class="system-name">Firestore DB</span>
+          <span class="system-status">정상</span>
+        </div>
+        <div class="system-item">
+          <span class="system-dot dot-green"></span>
+          <span class="system-name">Cloudflare R2</span>
+          <span class="system-status">정상</span>
+        </div>
+        <div class="system-item">
+          <span class="system-dot dot-green"></span>
+          <span class="system-name">DeepL API</span>
+          <span class="system-status">15% 사용</span>
+        </div>
+        <div class="system-item">
+          <span class="system-dot dot-green"></span>
+          <span class="system-name">Vercel 배포</span>
+          <span class="system-status">정상</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 하단 브랜드 배너 -->
+  <div style="margin-top: 24px; padding: 18px; background: rgba(212,165,116,0.03); border: 1px solid var(--border); border-radius: 10px; text-align: center;">
+    <div style="font-family: Georgia, serif; font-size: 18px; letter-spacing: 3px; color: var(--accent-gold-lt); font-weight: 700;">BANADA</div>
+    <div style="font-size: 10px; color: var(--text-muted); letter-spacing: 3px; margin-top: 4px;">TIME STOPS HERE · 시간이 멈추는 곳</div>
   </div>
 </div>
 
-<!-- KPI 카드 (럭셔리) -->
-<div class="kpi-grid">
-  <div class="kpi-card">
-    <div class="kpi-label">✦ 전체 회원</div>
-    <div class="kpi-value">2,247</div>
-    <div class="kpi-change up">▲ 오늘 +38</div>
-  </div>
-  <div class="kpi-card">
-    <div class="kpi-label">✦ 활성 매칭</div>
-    <div class="kpi-value">89</div>
-    <div class="kpi-change up">▲ 실시간 +12</div>
-  </div>
-  <div class="kpi-card">
-    <div class="kpi-label">✦ 신규 가입 대기</div>
-    <div class="kpi-value">17</div>
-    <div class="kpi-change down">▼ 어제 -3</div>
-  </div>
-  <div class="kpi-card">
-    <div class="kpi-label">✦ 오늘 매출</div>
-    <div class="kpi-value">₩4.2M</div>
-    <div class="kpi-change up">▲ 어제 대비 +18%</div>
-  </div>
-</div>
+<!-- ═════════════ 페이지 전용 스타일 ═════════════ -->
+<style>
+  /* 액션 카드 (즉시 처리 필요) */
+  .action-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px 18px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--text-muted);
+    border-radius: 10px;
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.15s;
+    cursor: pointer;
+  }
+  .action-card:hover {
+    background: var(--bg-elevated);
+    transform: translateY(-1px);
+  }
+  .action-urgent  { border-left-color: var(--accent-red); }
+  .action-urgent:hover { box-shadow: 0 4px 12px rgba(232,85,85,0.15); }
+  .action-warning { border-left-color: var(--accent-warn); }
+  .action-warning:hover { box-shadow: 0 4px 12px rgba(255,152,0,0.15); }
+  .action-danger  { border-left-color: var(--accent-red); background: rgba(232,85,85,0.04); }
+  .action-danger:hover { box-shadow: 0 4px 12px rgba(232,85,85,0.2); }
+  .action-info    { border-left-color: var(--accent-blue); }
+  .action-info:hover { box-shadow: 0 4px 12px rgba(41,182,246,0.15); }
+  .action-icon {
+    font-size: 26px;
+    flex-shrink: 0;
+    opacity: 0.85;
+  }
+  .action-content { flex: 1; min-width: 0; }
+  .action-count {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--text-primary);
+    line-height: 1;
+    margin-bottom: 4px;
+    letter-spacing: -0.5px;
+  }
+  .action-label {
+    font-size: 12px;
+    color: var(--text-secondary);
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+  .action-desc {
+    font-size: 11px;
+    color: var(--text-muted);
+  }
+  .action-desc b {
+    color: var(--accent-gold);
+    font-weight: 700;
+  }
 
-<!-- 최근 활동 -->
-<div class="card">
-  <h2 class="card-title">
-    <span style="color: var(--accent-gold);">◆</span>
-    최근 활동
-    <span style="margin-left: auto; font-size: 11px; color: var(--text-muted); font-weight: 500; letter-spacing: 1px;">LIVE</span>
-  </h2>
-  <table class="data-table">
-    <thead>
-      <tr>
-        <td>시간</td>
-        <td>유형</td>
-        <td>내용</td>
-        <td style="text-align: right;">상태</td>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td style="color: var(--accent-gold-lt); font-weight: 600;">방금 전</td>
-        <td>신규 가입</td>
-        <td>회원 <b>jinho_88</b>님이 가입했습니다</td>
-        <td style="text-align: right;"><span class="badge success">완료</span></td>
-      </tr>
-      <tr>
-        <td style="color: var(--accent-gold-lt); font-weight: 600;">2분 전</td>
-        <td>매칭 요청</td>
-        <td>강남 지역 VIP 매칭 요청 · <b>1건</b></td>
-        <td style="text-align: right;"><span class="badge warning">대기</span></td>
-      </tr>
-      <tr>
-        <td style="color: var(--accent-gold-lt); font-weight: 600;">5분 전</td>
-        <td>결제</td>
-        <td>회원 <b>miyoung_09</b>님 · 프리미엄 결제 ₩450,000</td>
-        <td style="text-align: right;"><span class="badge success">완료</span></td>
-      </tr>
-      <tr>
-        <td style="color: var(--accent-gold-lt); font-weight: 600;">12분 전</td>
-        <td>시스템</td>
-        <td>DeepL 번역 API 사용량 · 15% 도달</td>
-        <td style="text-align: right;"><span class="badge info">정상</span></td>
-      </tr>
-      <tr>
-        <td style="color: var(--accent-gold-lt); font-weight: 600;">30분 전</td>
-        <td>문의</td>
-        <td>회원 <b>hyunwoo_1234</b>님 · 환불 문의</td>
-        <td style="text-align: right;"><span class="badge error">미처리</span></td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+  /* 실시간 활동 피드 */
+  .activity-feed {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    max-height: 320px;
+    overflow-y: auto;
+  }
+  .activity-item {
+    display: grid;
+    grid-template-columns: 70px 50px 1fr;
+    gap: 12px;
+    padding: 10px 8px;
+    border-radius: 6px;
+    align-items: center;
+    transition: background 0.1s;
+  }
+  .activity-item:hover {
+    background: var(--bg-hover);
+  }
+  .activity-time {
+    font-size: 11px;
+    color: var(--text-muted);
+    font-weight: 500;
+  }
+  .activity-tag {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 3px 6px;
+    border-radius: 4px;
+    text-align: center;
+    letter-spacing: 0.3px;
+  }
+  .tag-green { background: rgba(76,175,80,0.12); color: var(--accent-green); }
+  .tag-gold  { background: rgba(212,165,116,0.15); color: var(--accent-gold); }
+  .tag-blue  { background: rgba(41,182,246,0.12); color: var(--accent-blue); }
+  .tag-red   { background: rgba(232,85,85,0.12); color: var(--accent-red); }
+  .activity-text {
+    font-size: 12.5px;
+    color: var(--text-primary);
+  }
+  .activity-text b { color: var(--accent-gold-lt); font-weight: 600; }
 
-<!-- 하단 2단 그리드 -->
-<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 18px;">
-  <div class="card">
-    <h2 class="card-title">
-      <span style="color: var(--accent-gold);">◇</span>
-      지역별 매칭 요청
-      <span style="margin-left: auto; font-size: 11px; color: var(--text-muted); font-weight: 500; letter-spacing: 1px;">TODAY</span>
-    </h2>
-    <table class="data-table">
-      <tbody>
-        <tr>
-          <td><span style="color: var(--accent-gold); margin-right: 8px;">①</span> 서울 강남</td>
-          <td style="text-align: right;"><b>32건</b></td>
-        </tr>
-        <tr>
-          <td><span style="color: var(--accent-rose); margin-right: 8px;">②</span> 서울 강북</td>
-          <td style="text-align: right;"><b>18건</b></td>
-        </tr>
-        <tr>
-          <td><span style="color: var(--accent-rose-lt); margin-right: 8px;">③</span> 경기 남부</td>
-          <td style="text-align: right;"><b>14건</b></td>
-        </tr>
-        <tr>
-          <td><span style="color: var(--text-muted); margin-right: 8px;">④</span> 부산</td>
-          <td style="text-align: right;"><b>9건</b></td>
-        </tr>
-        <tr>
-          <td><span style="color: var(--text-muted); margin-right: 8px;">⑤</span> 대구</td>
-          <td style="text-align: right;"><b>5건</b></td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-  <div class="card">
-    <h2 class="card-title">
-      <span style="color: var(--accent-gold);">◈</span>
-      시스템 상태
-      <span style="margin-left: auto; font-size: 11px; color: var(--accent-green); font-weight: 600; letter-spacing: 1px;">● ALL OK</span>
-    </h2>
-    <table class="data-table">
-      <tbody>
-        <tr><td>웹 서버</td><td style="text-align: right;"><span class="badge success">정상</span></td></tr>
-        <tr><td>Firestore</td><td style="text-align: right;"><span class="badge success">정상</span></td></tr>
-        <tr><td>Cloudflare R2</td><td style="text-align: right;"><span class="badge success">정상</span></td></tr>
-        <tr><td>DeepL API</td><td style="text-align: right;"><span class="badge success">정상</span></td></tr>
-        <tr><td>Vercel 배포</td><td style="text-align: right;"><span class="badge success">정상</span></td></tr>
-      </tbody>
-    </table>
-  </div>
-</div>
+  /* 지역별 매칭 리스트 */
+  .region-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .region-item {
+    display: grid;
+    grid-template-columns: 24px 1fr 100px 40px;
+    gap: 10px;
+    align-items: center;
+    padding: 6px 0;
+  }
+  .region-rank {
+    font-size: 12px;
+    color: var(--accent-gold);
+    font-weight: 700;
+    text-align: center;
+    background: rgba(212,165,116,0.08);
+    padding: 3px 0;
+    border-radius: 4px;
+  }
+  .region-name {
+    font-size: 13px;
+    color: var(--text-primary);
+    font-weight: 500;
+  }
+  .region-bar {
+    height: 5px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .region-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent-gold), var(--accent-rose));
+    border-radius: 3px;
+  }
+  .region-count {
+    font-size: 14px;
+    color: var(--text-primary);
+    font-weight: 700;
+    text-align: right;
+    font-family: 'JetBrains Mono', monospace;
+  }
 
-<!-- 하단 럭셔리 배너 -->
-<div style="margin-top: 18px; padding: 20px 26px; background: linear-gradient(90deg, rgba(255,221,102,0.05), rgba(212,165,116,0.03), rgba(176,133,224,0.03)); border: 1px solid var(--border); border-radius: 14px; text-align: center; position: relative; overflow: hidden;">
-  <div style="position: relative; z-index: 1;">
-    <div style="font-family: Georgia, serif; font-size: 20px; letter-spacing: 3px; background: linear-gradient(135deg, var(--accent-gold-lt), var(--accent-rose)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 700;">BANADA</div>
-    <div style="font-size: 10px; color: var(--text-muted); letter-spacing: 4px; margin-top: 4px;">TIME STOPS HERE · 시간이 멈추는 곳</div>
-  </div>
-</div>
+  /* 빠른 링크 */
+  .quick-links {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+  .quick-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 14px;
+    background: var(--bg-body);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text-primary);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    transition: all 0.15s;
+    cursor: pointer;
+  }
+  .quick-link:hover {
+    background: var(--bg-elevated);
+    border-color: rgba(212,165,116,0.3);
+    color: var(--accent-gold-lt);
+  }
+  .quick-link .ql-icon { font-size: 16px; }
+  .quick-link .ql-text { flex: 1; }
+  .quick-link .ql-arrow {
+    color: var(--text-muted);
+    font-size: 12px;
+    transition: transform 0.15s, color 0.15s;
+  }
+  .quick-link:hover .ql-arrow {
+    color: var(--accent-gold);
+    transform: translateX(2px);
+  }
+
+  /* 시스템 상태 */
+  .system-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .system-item {
+    display: grid;
+    grid-template-columns: 12px 1fr auto;
+    gap: 12px;
+    align-items: center;
+    padding: 8px 4px;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+  .system-item:last-child { border-bottom: none; }
+  .system-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+  }
+  .dot-green {
+    background: var(--accent-green);
+    box-shadow: 0 0 6px rgba(76,175,80,0.5);
+  }
+  .system-name {
+    font-size: 12.5px;
+    color: var(--text-primary);
+    font-weight: 500;
+  }
+  .system-status {
+    font-size: 11px;
+    color: var(--accent-green);
+    font-weight: 600;
+  }
+
+  /* 반응형 */
+  @media (max-width: 1024px) {
+    .quick-links { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 768px) {
+    #mainDashboard > div[style*="grid-template-columns: 1.4fr 1fr"] {
+      grid-template-columns: 1fr !important;
+    }
+    .quick-links { grid-template-columns: 1fr; }
+  }
+</style>
 
 <script>
-  // 오늘 날짜 표시
   (function() {
-    const el = document.getElementById('mainDateBadge');
-    if (el) {
-      const d = new Date();
-      const days = ['일', '월', '화', '수', '목', '금', '토'];
-      el.textContent = `${d.getFullYear()}. ${String(d.getMonth()+1).padStart(2,'0')}. ${String(d.getDate()).padStart(2,'0')} (${days[d.getDay()]})`;
+    const d = new Date();
+    const days = ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'];
+    const hours = d.getHours();
+
+    // 날짜 표시
+    const dateBadge = document.getElementById('mainDateBadge');
+    if (dateBadge) {
+      dateBadge.textContent = `${d.getFullYear()}. ${String(d.getMonth()+1).padStart(2,'0')}. ${String(d.getDate()).padStart(2,'0')}`;
+    }
+    const weekBadge = document.getElementById('mainWeekBadge');
+    if (weekBadge) {
+      weekBadge.textContent = days[d.getDay()];
+    }
+
+    // 시간대별 인사말
+    const greetingLabel = document.getElementById('greetingLabel');
+    if (greetingLabel) {
+      if (hours < 12) greetingLabel.textContent = 'GOOD MORNING';
+      else if (hours < 18) greetingLabel.textContent = 'GOOD AFTERNOON';
+      else greetingLabel.textContent = 'GOOD EVENING';
     }
   })();
 </script>
