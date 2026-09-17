@@ -252,7 +252,9 @@ export function init(container) {
   const selectRange = (a, b) => {
     const r1 = Math.min(a.r, b.r), r2 = Math.max(a.r, b.r);
     const c1 = Math.min(a.c, b.c), c2 = Math.max(a.c, b.c);
-    clearSelection();
+    // ★ [수정] 기존 선택만 시각적으로 해제 (startCell/endCell은 유지!)
+    selectedCells.forEach(c => c.classList.remove('selected'));
+    selectedCells.clear();
     for (let r = r1; r <= r2; r++) {
       const row = table.rows[r];
       if (!row) continue;
@@ -285,14 +287,15 @@ export function init(container) {
 
   const onMouseDown = (e) => {
     const cell = e.target.closest('td');
+    console.log('[DEBUG] mousedown - cell:', !!cell, 'ctrl:', e.ctrlKey);
     if (!cell) return;
     const multi = e.ctrlKey || e.metaKey;
     if (multi) {
+      console.log('[DEBUG] Ctrl+클릭 모드 시작');
       if (document.activeElement?.closest('.rtd-table')) document.activeElement.blur();
       clearSelection();
       startCell = cell;
       endCell = cell;
-      // ★ [수정] Ctrl+드래그 시작하는 첫 셀을 즉시 선택 상태로
       cell.classList.add('selected');
       selectedCells.add(cell);
       table.classList.add('disable-select');
@@ -300,6 +303,7 @@ export function init(container) {
       document.addEventListener('mouseup', onMouseUp);
       e.preventDefault();
       e.stopPropagation();
+      console.log('[DEBUG] startCell 설정됨:', startCell?.textContent);
     } else {
       clearSelection();
       cell.classList.add('selected');
@@ -308,13 +312,16 @@ export function init(container) {
   };
 
   const onMouseMove = (e) => {
-    if (!startCell) return;
-    if (!e.ctrlKey && !e.metaKey) { onMouseUp(); return; }
+    if (!startCell) { console.log('[DEBUG] onMouseMove: startCell 없음'); return; }
+    if (!e.ctrlKey && !e.metaKey) { console.log('[DEBUG] Ctrl 놓음 - 종료'); onMouseUp(); return; }
     const cell = e.target.closest('td');
-    if (!cell || cell === lastMoveEndCell) return;
+    if (!cell) { console.log('[DEBUG] onMouseMove: 셀 아님'); return; }
+    if (cell === lastMoveEndCell) return;
+    console.log('[DEBUG] onMouseMove - 새 셀:', cell.textContent);
     endCell = cell;
     lastMoveEndCell = cell;
     selectRange(coordOf(startCell), coordOf(endCell));
+    console.log('[DEBUG] selectRange 후 selectedCells 크기:', selectedCells.size);
     drawBox(startCell, endCell);
     isDragging = true;
   };
