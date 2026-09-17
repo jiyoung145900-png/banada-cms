@@ -292,6 +292,9 @@ export function init(container) {
       clearSelection();
       startCell = cell;
       endCell = cell;
+      // ★ [수정] Ctrl+드래그 시작하는 첫 셀을 즉시 선택 상태로
+      cell.classList.add('selected');
+      selectedCells.add(cell);
       table.classList.add('disable-select');
       document.addEventListener('mousemove', onMouseMove);
       document.addEventListener('mouseup', onMouseUp);
@@ -396,23 +399,35 @@ export function init(container) {
   });
 
   container.querySelector('#rtdDelRow').addEventListener('click', () => {
+    // ★ [수정] 선택된 셀에서 헤더(<thead>) 셀은 미리 제외
+    const validSelectedCells = Array.from(selectedCells).filter(c => {
+      const row = c.closest('tr');
+      return row && row.parentElement !== table.tHead;
+    });
     const rowIdx = new Set();
-    selectedCells.forEach(c => rowIdx.add(c.closest('tr').rowIndex));
+    validSelectedCells.forEach(c => rowIdx.add(c.closest('tr').rowIndex));
+
     if (rowIdx.size === 0) {
+      // 선택된 데이터 행이 없으면 마지막 데이터 행 삭제
       const rows = table.tBodies[0].rows;
       if (rows.length === 0) return toast('삭제할 행이 없습니다.', 'info');
       if (!confirm('마지막 데이터 행을 삭제하시겠습니까?')) return;
       rows[rows.length - 1].remove();
+      clearSelection();
       triggerSave();
       toast('행을 삭제했습니다.', 'success');
       return;
     }
-    if (!confirm(`선택된 ${rowIdx.size}개 행을 삭제하시겠습니까? (헤더 제외)`)) return;
+    if (!confirm(`선택된 ${rowIdx.size}개 행을 삭제하시겠습니까? (헤더는 자동 제외)`)) return;
+    // ★ 큰 인덱스부터 삭제 (인덱스 밀림 방지)
     const sorted = Array.from(rowIdx).sort((a, b) => b - a);
     let deleted = 0;
     for (const idx of sorted) {
       const row = table.rows[idx];
+      if (!row) continue;
+      // ★ [안전장치] thead의 행은 절대 삭제 안 함
       if (row.parentElement === table.tHead) continue;
+      if (row.parentElement?.tagName === 'THEAD') continue;
       row.remove();
       deleted++;
     }
@@ -420,6 +435,8 @@ export function init(container) {
     if (deleted > 0) {
       triggerSave();
       toast(`${deleted}개 행을 삭제했습니다.`, 'success');
+    } else {
+      toast('삭제할 수 있는 데이터 행이 없습니다. (헤더는 삭제 불가)', 'warning');
     }
   });
 
