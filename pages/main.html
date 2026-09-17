@@ -1,29 +1,39 @@
+<!-- ═══════════════════════════════════════════════
+     BANADA 데이터 센터 - 메인 대시보드 (럭셔리 리디자인)
+     ═══════════════════════════════════════════════ -->
+
+<!-- 환영 헤더 -->
 <div class="page-header">
   <div>
-    <h1 class="page-title">📊 메인 대시보드</h1>
-    <p class="page-subtitle">BANADA 데이터 센터에 오신 것을 환영합니다</p>
+    <div style="font-size: 11px; color: var(--accent-rose); letter-spacing: 3px; font-weight: 700; margin-bottom: 6px;">DASHBOARD</div>
+    <h1 class="page-title">BANADA 데이터 센터</h1>
+    <p class="page-subtitle">✨ 실시간 프리미엄 매칭 현황 · 오늘도 좋은 하루 되세요</p>
+  </div>
+  <div style="text-align: right;">
+    <div style="font-size: 11px; color: var(--text-muted); letter-spacing: 1px;">TODAY</div>
+    <div style="font-size: 18px; color: var(--accent-gold); font-weight: 700; margin-top: 4px;" id="mainDateBadge"></div>
   </div>
 </div>
 
-<!-- KPI 카드 -->
+<!-- KPI 카드 (럭셔리) -->
 <div class="kpi-grid">
   <div class="kpi-card">
-    <div class="kpi-label">전체 회원</div>
+    <div class="kpi-label">✦ 전체 회원</div>
     <div class="kpi-value">2,247</div>
     <div class="kpi-change up">▲ 오늘 +38</div>
   </div>
   <div class="kpi-card">
-    <div class="kpi-label">활성 매칭</div>
+    <div class="kpi-label">✦ 활성 매칭</div>
     <div class="kpi-value">89</div>
     <div class="kpi-change up">▲ 실시간 +12</div>
   </div>
   <div class="kpi-card">
-    <div class="kpi-label">신규 가입 대기</div>
+    <div class="kpi-label">✦ 신규 가입 대기</div>
     <div class="kpi-value">17</div>
     <div class="kpi-change down">▼ 어제 -3</div>
   </div>
   <div class="kpi-card">
-    <div class="kpi-label">오늘 매출</div>
+    <div class="kpi-label">✦ 오늘 매출</div>
     <div class="kpi-value">₩4.2M</div>
     <div class="kpi-change up">▲ 어제 대비 +18%</div>
   </div>
@@ -31,75 +41,122 @@
 
 <!-- 최근 활동 -->
 <div class="card">
-  <h2 class="card-title">📌 최근 활동</h2>
+  <h2 class="card-title">
+    <span style="color: var(--accent-gold);">◆</span>
+    최근 활동
+    <span style="margin-left: auto; font-size: 11px; color: var(--text-muted); font-weight: 500; letter-spacing: 1px;">LIVE</span>
+  </h2>
   <table class="data-table">
     <thead>
       <tr>
         <td>시간</td>
         <td>유형</td>
         <td>내용</td>
-        <td>상태</td>
+        <td style="text-align: right;">상태</td>
       </tr>
     </thead>
     <tbody>
       <tr>
-        <td>방금 전</td>
+        <td style="color: var(--accent-gold-lt); font-weight: 600;">방금 전</td>
         <td>신규 가입</td>
         <td>회원 <b>jinho_88</b>님이 가입했습니다</td>
-        <td><span class="badge success">완료</span></td>
+        <td style="text-align: right;"><span class="badge success">완료</span></td>
       </tr>
       <tr>
-        <td>2분 전</td>
+        <td style="color: var(--accent-gold-lt); font-weight: 600;">2분 전</td>
         <td>매칭 요청</td>
         <td>강남 지역 VIP 매칭 요청 · <b>1건</b></td>
-        <td><span class="badge warning">대기</span></td>
+        <td style="text-align: right;"><span class="badge warning">대기</span></td>
       </tr>
       <tr>
-        <td>5분 전</td>
+        <td style="color: var(--accent-gold-lt); font-weight: 600;">5분 전</td>
         <td>결제</td>
         <td>회원 <b>miyoung_09</b>님 · 프리미엄 결제 ₩450,000</td>
-        <td><span class="badge success">완료</span></td>
+        <td style="text-align: right;"><span class="badge success">완료</span></td>
       </tr>
       <tr>
-        <td>12분 전</td>
+        <td style="color: var(--accent-gold-lt); font-weight: 600;">12분 전</td>
         <td>시스템</td>
         <td>DeepL 번역 API 사용량 · 15% 도달</td>
-        <td><span class="badge info">정상</span></td>
+        <td style="text-align: right;"><span class="badge info">정상</span></td>
       </tr>
       <tr>
-        <td>30분 전</td>
+        <td style="color: var(--accent-gold-lt); font-weight: 600;">30분 전</td>
         <td>문의</td>
         <td>회원 <b>hyunwoo_1234</b>님 · 환불 문의</td>
-        <td><span class="badge error">미처리</span></td>
+        <td style="text-align: right;"><span class="badge error">미처리</span></td>
       </tr>
     </tbody>
   </table>
 </div>
 
-<!-- 빠른 통계 -->
-<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+<!-- 하단 2단 그리드 -->
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 18px;">
   <div class="card">
-    <h2 class="card-title">🗺 지역별 매칭 요청 (오늘)</h2>
+    <h2 class="card-title">
+      <span style="color: var(--accent-gold);">◇</span>
+      지역별 매칭 요청
+      <span style="margin-left: auto; font-size: 11px; color: var(--text-muted); font-weight: 500; letter-spacing: 1px;">TODAY</span>
+    </h2>
     <table class="data-table">
       <tbody>
-        <tr><td>서울 강남</td><td style="text-align: right;"><b>32건</b></td></tr>
-        <tr><td>서울 강북</td><td style="text-align: right;"><b>18건</b></td></tr>
-        <tr><td>경기 남부</td><td style="text-align: right;"><b>14건</b></td></tr>
-        <tr><td>부산</td><td style="text-align: right;"><b>9건</b></td></tr>
-        <tr><td>대구</td><td style="text-align: right;"><b>5건</b></td></tr>
+        <tr>
+          <td><span style="color: var(--accent-gold); margin-right: 8px;">①</span> 서울 강남</td>
+          <td style="text-align: right;"><b>32건</b></td>
+        </tr>
+        <tr>
+          <td><span style="color: var(--accent-rose); margin-right: 8px;">②</span> 서울 강북</td>
+          <td style="text-align: right;"><b>18건</b></td>
+        </tr>
+        <tr>
+          <td><span style="color: var(--accent-rose-lt); margin-right: 8px;">③</span> 경기 남부</td>
+          <td style="text-align: right;"><b>14건</b></td>
+        </tr>
+        <tr>
+          <td><span style="color: var(--text-muted); margin-right: 8px;">④</span> 부산</td>
+          <td style="text-align: right;"><b>9건</b></td>
+        </tr>
+        <tr>
+          <td><span style="color: var(--text-muted); margin-right: 8px;">⑤</span> 대구</td>
+          <td style="text-align: right;"><b>5건</b></td>
+        </tr>
       </tbody>
     </table>
   </div>
   <div class="card">
-    <h2 class="card-title">⚡ 시스템 상태</h2>
+    <h2 class="card-title">
+      <span style="color: var(--accent-gold);">◈</span>
+      시스템 상태
+      <span style="margin-left: auto; font-size: 11px; color: var(--accent-green); font-weight: 600; letter-spacing: 1px;">● ALL OK</span>
+    </h2>
     <table class="data-table">
       <tbody>
-        <tr><td>웹 서버</td><td><span class="badge success">정상</span></td></tr>
-        <tr><td>Firestore</td><td><span class="badge success">정상</span></td></tr>
-        <tr><td>Cloudinary</td><td><span class="badge success">정상</span></td></tr>
-        <tr><td>DeepL API</td><td><span class="badge success">정상</span></td></tr>
-        <tr><td>Vercel 배포</td><td><span class="badge success">정상</span></td></tr>
+        <tr><td>웹 서버</td><td style="text-align: right;"><span class="badge success">정상</span></td></tr>
+        <tr><td>Firestore</td><td style="text-align: right;"><span class="badge success">정상</span></td></tr>
+        <tr><td>Cloudflare R2</td><td style="text-align: right;"><span class="badge success">정상</span></td></tr>
+        <tr><td>DeepL API</td><td style="text-align: right;"><span class="badge success">정상</span></td></tr>
+        <tr><td>Vercel 배포</td><td style="text-align: right;"><span class="badge success">정상</span></td></tr>
       </tbody>
     </table>
   </div>
 </div>
+
+<!-- 하단 럭셔리 배너 -->
+<div style="margin-top: 18px; padding: 20px 26px; background: linear-gradient(90deg, rgba(255,221,102,0.05), rgba(212,165,116,0.03), rgba(176,133,224,0.03)); border: 1px solid var(--border); border-radius: 14px; text-align: center; position: relative; overflow: hidden;">
+  <div style="position: relative; z-index: 1;">
+    <div style="font-family: Georgia, serif; font-size: 20px; letter-spacing: 3px; background: linear-gradient(135deg, var(--accent-gold-lt), var(--accent-rose)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 700;">BANADA</div>
+    <div style="font-size: 10px; color: var(--text-muted); letter-spacing: 4px; margin-top: 4px;">TIME STOPS HERE · 시간이 멈추는 곳</div>
+  </div>
+</div>
+
+<script>
+  // 오늘 날짜 표시
+  (function() {
+    const el = document.getElementById('mainDateBadge');
+    if (el) {
+      const d = new Date();
+      const days = ['일', '월', '화', '수', '목', '금', '토'];
+      el.textContent = `${d.getFullYear()}. ${String(d.getMonth()+1).padStart(2,'0')}. ${String(d.getDate()).padStart(2,'0')} (${days[d.getDay()]})`;
+    }
+  })();
+</script>
