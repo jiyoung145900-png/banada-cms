@@ -52,12 +52,18 @@ body {
   background: var(--bg-body);
   color: var(--text-primary);
   min-height: 100vh;
-  display: flex;
   overflow: hidden;
   /* 은은한 럭셔리 배경 */
   background-image:
     radial-gradient(ellipse at top left, rgba(212, 165, 116, 0.04), transparent 50%),
     radial-gradient(ellipse at bottom right, rgba(176, 133, 224, 0.04), transparent 50%);
+}
+
+/* ★ [수정] .app 컨테이너에 flex 적용 (실제 구조가 body > .app > 사이드바 + 메인) */
+.app {
+  display: flex;
+  min-height: 100vh;
+  height: 100vh;
 }
 
 a { color: inherit; text-decoration: none; }
