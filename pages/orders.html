@@ -1,16 +1,804 @@
-<div class="page-header">
-  <div>
-    <h1 class="page-title">📦 주문 상태</h1>
-    <p class="page-subtitle">모든 주문의 처리 현황을 확인합니다</p>
-  </div>
-</div>
+<!-- ═══════════════════════════════════════════════
+     주문 상태 - BANADA CMS
+     미니멀 실용형 주문 관리 페이지
+     ═══════════════════════════════════════════════ -->
 
-<div class="card">
-  <div class="empty-state">
-    <div class="icon">🚧</div>
-    <div class="text">이 페이지는 준비 중입니다.</div>
-    <div style="margin-top: 12px; color: var(--text-muted); font-size: 12px;">
-      pages/orders.html 파일에서 콘텐츠를 편집하세요.
+<div id="ordersPage">
+
+  <!-- 헤더 -->
+  <div class="page-header">
+    <div>
+      <div style="font-size: 11px; color: var(--accent-rose); letter-spacing: 2px; font-weight: 700; margin-bottom: 4px;">ORDER MANAGEMENT</div>
+      <h1 class="page-title">주문 상태</h1>
+      <p class="page-subtitle">총 <b style="color: var(--accent-gold);" id="orderTotalCount">142</b>건의 주문 · 오늘 신규 <b style="color: var(--accent-gold);">12</b>건</p>
+    </div>
+    <div style="display: flex; gap: 8px;">
+      <button class="ord-btn ord-btn-secondary" id="btnExport">📥 엑셀 내보내기</button>
+      <button class="ord-btn ord-btn-primary" id="btnAddOrder">+ 신규 주문</button>
+    </div>
+  </div>
+
+  <!-- 통계 카드 -->
+  <div class="ord-stats">
+    <div class="ord-stat-card">
+      <div class="ord-stat-label">오늘 신규</div>
+      <div class="ord-stat-value">12</div>
+      <div class="ord-stat-change up">▲ +3 어제 대비</div>
+    </div>
+    <div class="ord-stat-card">
+      <div class="ord-stat-label">진행 중</div>
+      <div class="ord-stat-value">28</div>
+      <div class="ord-stat-change">검수 15 · 매칭 13</div>
+    </div>
+    <div class="ord-stat-card">
+      <div class="ord-stat-label">완료율</div>
+      <div class="ord-stat-value">94.2<span style="font-size: 16px; color: var(--text-muted);">%</span></div>
+      <div class="ord-stat-change up">▲ +2.1% 이번주</div>
+    </div>
+    <div class="ord-stat-card">
+      <div class="ord-stat-label">이번달 매출</div>
+      <div class="ord-stat-value">₩68.4M</div>
+      <div class="ord-stat-change up">▲ +18% 지난달</div>
+    </div>
+  </div>
+
+  <!-- 필터 & 검색 -->
+  <div class="ord-toolbar">
+    <div class="ord-tabs" id="ordTabs">
+      <button class="ord-tab active" data-status="all">
+        전체 <span class="ord-tab-count">142</span>
+      </button>
+      <button class="ord-tab" data-status="pending">
+        대기 <span class="ord-tab-count">17</span>
+      </button>
+      <button class="ord-tab" data-status="progress">
+        진행중 <span class="ord-tab-count">28</span>
+      </button>
+      <button class="ord-tab" data-status="done">
+        완료 <span class="ord-tab-count">89</span>
+      </button>
+      <button class="ord-tab" data-status="canceled">
+        취소·환불 <span class="ord-tab-count">8</span>
+      </button>
+    </div>
+    <div class="ord-toolbar-right">
+      <select class="ord-select" id="ordDateFilter">
+        <option value="today">오늘</option>
+        <option value="week" selected>이번 주</option>
+        <option value="month">이번 달</option>
+        <option value="all">전체 기간</option>
+      </select>
+      <input type="text" class="ord-search" placeholder="🔍 주문번호 · 회원 검색" id="ordSearch">
+    </div>
+  </div>
+
+  <!-- 테이블 -->
+  <div class="ord-table-wrap">
+    <table class="ord-table" id="ordTable">
+      <thead>
+        <tr>
+          <th style="width: 40px;">
+            <input type="checkbox" id="chkAll" class="ord-check">
+          </th>
+          <th style="width: 130px;">주문번호</th>
+          <th>회원</th>
+          <th>서비스</th>
+          <th style="width: 110px; text-align: right;">금액</th>
+          <th style="width: 130px;">신청일시</th>
+          <th style="width: 100px;">상태</th>
+          <th style="width: 100px; text-align: right;">액션</th>
+        </tr>
+      </thead>
+      <tbody id="ordTbody">
+        <tr>
+          <td><input type="checkbox" class="ord-check row-check"></td>
+          <td><span class="ord-id">#ORD-2547</span></td>
+          <td>
+            <div class="ord-user">
+              <div class="ord-user-avatar" style="background: rgba(212,165,116,0.15); color: var(--accent-gold);">J</div>
+              <div>
+                <div class="ord-user-name">jinho_88</div>
+                <div class="ord-user-tier tier-vip">VIP</div>
+              </div>
+            </div>
+          </td>
+          <td>
+            <div class="ord-service">
+              <div class="ord-service-name">프리미엄 매칭</div>
+              <div class="ord-service-desc">서울 강남 · 지역 매칭</div>
+            </div>
+          </td>
+          <td class="ord-amount">₩450,000</td>
+          <td class="ord-date">방금 전<div class="ord-date-sub">2026-09-18 10:24</div></td>
+          <td><span class="ord-status status-pending">● 대기</span></td>
+          <td>
+            <div class="ord-actions">
+              <button class="ord-action-btn action-approve" title="승인">✓</button>
+              <button class="ord-action-btn action-cancel" title="취소">✕</button>
+              <button class="ord-action-btn action-view" title="상세">⋯</button>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td><input type="checkbox" class="ord-check row-check"></td>
+          <td><span class="ord-id">#ORD-2546</span></td>
+          <td>
+            <div class="ord-user">
+              <div class="ord-user-avatar" style="background: rgba(228,182,137,0.15); color: var(--accent-rose);">M</div>
+              <div>
+                <div class="ord-user-name">miyoung_09</div>
+                <div class="ord-user-tier tier-vip">VIP</div>
+              </div>
+            </div>
+          </td>
+          <td>
+            <div class="ord-service">
+              <div class="ord-service-name">프리미엄 매칭</div>
+              <div class="ord-service-desc">전국 · 매칭 서비스</div>
+            </div>
+          </td>
+          <td class="ord-amount">₩380,000</td>
+          <td class="ord-date">15분 전<div class="ord-date-sub">2026-09-18 10:09</div></td>
+          <td><span class="ord-status status-progress">● 진행중</span></td>
+          <td>
+            <div class="ord-actions">
+              <button class="ord-action-btn action-complete" title="완료">✓</button>
+              <button class="ord-action-btn action-view" title="상세">⋯</button>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td><input type="checkbox" class="ord-check row-check"></td>
+          <td><span class="ord-id">#ORD-2545</span></td>
+          <td>
+            <div class="ord-user">
+              <div class="ord-user-avatar" style="background: rgba(41,182,246,0.15); color: var(--accent-blue);">S</div>
+              <div>
+                <div class="ord-user-name">sunny_star</div>
+                <div class="ord-user-tier tier-regular">일반</div>
+              </div>
+            </div>
+          </td>
+          <td>
+            <div class="ord-service">
+              <div class="ord-service-name">기본 매칭</div>
+              <div class="ord-service-desc">서울 강북</div>
+            </div>
+          </td>
+          <td class="ord-amount">₩120,000</td>
+          <td class="ord-date">32분 전<div class="ord-date-sub">2026-09-18 09:52</div></td>
+          <td><span class="ord-status status-progress">● 진행중</span></td>
+          <td>
+            <div class="ord-actions">
+              <button class="ord-action-btn action-complete" title="완료">✓</button>
+              <button class="ord-action-btn action-view" title="상세">⋯</button>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td><input type="checkbox" class="ord-check row-check"></td>
+          <td><span class="ord-id">#ORD-2544</span></td>
+          <td>
+            <div class="ord-user">
+              <div class="ord-user-avatar" style="background: rgba(76,175,80,0.15); color: var(--accent-green);">H</div>
+              <div>
+                <div class="ord-user-name">hyunwoo_1234</div>
+                <div class="ord-user-tier tier-regular">일반</div>
+              </div>
+            </div>
+          </td>
+          <td>
+            <div class="ord-service">
+              <div class="ord-service-name">프리미엄 매칭</div>
+              <div class="ord-service-desc">경기 남부</div>
+            </div>
+          </td>
+          <td class="ord-amount">₩250,000</td>
+          <td class="ord-date">1시간 전<div class="ord-date-sub">2026-09-18 09:24</div></td>
+          <td><span class="ord-status status-done">● 완료</span></td>
+          <td>
+            <div class="ord-actions">
+              <button class="ord-action-btn action-view" title="상세">⋯</button>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td><input type="checkbox" class="ord-check row-check"></td>
+          <td><span class="ord-id">#ORD-2543</span></td>
+          <td>
+            <div class="ord-user">
+              <div class="ord-user-avatar" style="background: rgba(212,165,116,0.15); color: var(--accent-gold);">D</div>
+              <div>
+                <div class="ord-user-name">dahye_love</div>
+                <div class="ord-user-tier tier-vip">VIP</div>
+              </div>
+            </div>
+          </td>
+          <td>
+            <div class="ord-service">
+              <div class="ord-service-name">프리미엄 매칭</div>
+              <div class="ord-service-desc">서울 강남 · 지정 매칭</div>
+            </div>
+          </td>
+          <td class="ord-amount">₩550,000</td>
+          <td class="ord-date">2시간 전<div class="ord-date-sub">2026-09-18 08:11</div></td>
+          <td><span class="ord-status status-done">● 완료</span></td>
+          <td>
+            <div class="ord-actions">
+              <button class="ord-action-btn action-view" title="상세">⋯</button>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td><input type="checkbox" class="ord-check row-check"></td>
+          <td><span class="ord-id">#ORD-2542</span></td>
+          <td>
+            <div class="ord-user">
+              <div class="ord-user-avatar" style="background: rgba(255,152,0,0.15); color: var(--accent-warn);">K</div>
+              <div>
+                <div class="ord-user-name">kdrama_fan</div>
+                <div class="ord-user-tier tier-regular">일반</div>
+              </div>
+            </div>
+          </td>
+          <td>
+            <div class="ord-service">
+              <div class="ord-service-name">기본 매칭</div>
+              <div class="ord-service-desc">부산</div>
+            </div>
+          </td>
+          <td class="ord-amount ord-refund">₩150,000</td>
+          <td class="ord-date">3시간 전<div class="ord-date-sub">2026-09-18 07:15</div></td>
+          <td><span class="ord-status status-refund">● 환불</span></td>
+          <td>
+            <div class="ord-actions">
+              <button class="ord-action-btn action-view" title="상세">⋯</button>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td><input type="checkbox" class="ord-check row-check"></td>
+          <td><span class="ord-id">#ORD-2541</span></td>
+          <td>
+            <div class="ord-user">
+              <div class="ord-user-avatar" style="background: rgba(41,182,246,0.15); color: var(--accent-blue);">Y</div>
+              <div>
+                <div class="ord-user-name">young_star</div>
+                <div class="ord-user-tier tier-regular">일반</div>
+              </div>
+            </div>
+          </td>
+          <td>
+            <div class="ord-service">
+              <div class="ord-service-name">기본 매칭</div>
+              <div class="ord-service-desc">대구</div>
+            </div>
+          </td>
+          <td class="ord-amount">₩100,000</td>
+          <td class="ord-date">어제<div class="ord-date-sub">2026-09-17 22:40</div></td>
+          <td><span class="ord-status status-cancel">● 취소</span></td>
+          <td>
+            <div class="ord-actions">
+              <button class="ord-action-btn action-view" title="상세">⋯</button>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td><input type="checkbox" class="ord-check row-check"></td>
+          <td><span class="ord-id">#ORD-2540</span></td>
+          <td>
+            <div class="ord-user">
+              <div class="ord-user-avatar" style="background: rgba(228,182,137,0.15); color: var(--accent-rose);">P</div>
+              <div>
+                <div class="ord-user-name">premium_user</div>
+                <div class="ord-user-tier tier-vip">VIP</div>
+              </div>
+            </div>
+          </td>
+          <td>
+            <div class="ord-service">
+              <div class="ord-service-name">VVIP 매칭</div>
+              <div class="ord-service-desc">전국 · 프리미엄 서비스</div>
+            </div>
+          </td>
+          <td class="ord-amount">₩1,200,000</td>
+          <td class="ord-date">어제<div class="ord-date-sub">2026-09-17 20:15</div></td>
+          <td><span class="ord-status status-done">● 완료</span></td>
+          <td>
+            <div class="ord-actions">
+              <button class="ord-action-btn action-view" title="상세">⋯</button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 하단: 페이지네이션 -->
+  <div class="ord-footer">
+    <div class="ord-footer-info">
+      <b>1-8</b> / <b>142</b>건 표시
+    </div>
+    <div class="ord-pagination">
+      <button class="ord-page-btn" disabled>‹ 이전</button>
+      <button class="ord-page-btn active">1</button>
+      <button class="ord-page-btn">2</button>
+      <button class="ord-page-btn">3</button>
+      <span style="color: var(--text-muted); padding: 0 4px;">...</span>
+      <button class="ord-page-btn">18</button>
+      <button class="ord-page-btn">다음 ›</button>
     </div>
   </div>
 </div>
+
+<!-- ═════════════ 페이지 전용 스타일 ═════════════ -->
+<style>
+  /* 상단 통계 카드 (작게) */
+  .ord-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .ord-stat-card {
+    padding: 14px 16px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+  }
+  .ord-stat-label {
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .ord-stat-value {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--text-primary);
+    line-height: 1;
+    margin-bottom: 6px;
+    letter-spacing: -0.5px;
+  }
+  .ord-stat-change {
+    font-size: 11px;
+    color: var(--text-muted);
+    font-weight: 500;
+  }
+  .ord-stat-change.up { color: var(--accent-green); font-weight: 600; }
+
+  /* 상단 툴바 (탭 + 검색) */
+  .ord-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .ord-tabs {
+    display: flex;
+    gap: 4px;
+    background: var(--bg-panel);
+    padding: 4px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+  }
+  .ord-tab {
+    padding: 7px 14px;
+    background: transparent;
+    border: none;
+    border-radius: 5px;
+    color: var(--text-secondary);
+    font-size: 12.5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: inherit;
+  }
+  .ord-tab:hover {
+    color: var(--text-primary);
+    background: var(--bg-hover);
+  }
+  .ord-tab.active {
+    background: rgba(212,165,116,0.12);
+    color: var(--accent-gold-lt);
+  }
+  .ord-tab-count {
+    background: var(--bg-elevated);
+    color: var(--text-muted);
+    padding: 1px 7px;
+    border-radius: 8px;
+    font-size: 10.5px;
+    font-weight: 700;
+  }
+  .ord-tab.active .ord-tab-count {
+    background: rgba(212,165,116,0.2);
+    color: var(--accent-gold-lt);
+  }
+
+  .ord-toolbar-right {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .ord-select {
+    padding: 8px 12px;
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text-primary);
+    font-size: 12.5px;
+    font-family: inherit;
+    cursor: pointer;
+    outline: none;
+  }
+  .ord-select:focus { border-color: var(--accent-gold); }
+
+  .ord-search {
+    padding: 8px 12px;
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text-primary);
+    font-size: 12.5px;
+    font-family: inherit;
+    outline: none;
+    width: 220px;
+    transition: border-color 0.15s;
+  }
+  .ord-search::placeholder { color: var(--text-muted); }
+  .ord-search:focus {
+    border-color: var(--accent-gold);
+    width: 260px;
+  }
+
+  /* 액션 버튼 (상단) */
+  .ord-btn {
+    padding: 9px 16px;
+    border-radius: 6px;
+    font-size: 12.5px;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1px solid;
+    font-family: inherit;
+    transition: all 0.15s;
+  }
+  .ord-btn-secondary {
+    background: transparent;
+    border-color: var(--border);
+    color: var(--text-primary);
+  }
+  .ord-btn-secondary:hover {
+    background: var(--bg-hover);
+    border-color: var(--border-strong);
+  }
+  .ord-btn-primary {
+    background: var(--accent-gold);
+    color: #1a1a1e;
+    border-color: var(--accent-gold);
+    font-weight: 700;
+  }
+  .ord-btn-primary:hover {
+    background: var(--accent-gold-lt);
+  }
+
+  /* 테이블 */
+  .ord-table-wrap {
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .ord-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  .ord-table thead th {
+    padding: 12px 14px;
+    background: var(--bg-card);
+    color: var(--text-muted);
+    font-size: 10.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+  .ord-table tbody td {
+    padding: 14px;
+    border-bottom: 1px solid var(--border-subtle);
+    color: var(--text-primary);
+    vertical-align: middle;
+  }
+  .ord-table tbody tr {
+    transition: background 0.1s;
+  }
+  .ord-table tbody tr:hover {
+    background: var(--bg-hover);
+  }
+  .ord-table tbody tr:last-child td { border-bottom: none; }
+
+  /* 체크박스 */
+  .ord-check {
+    accent-color: var(--accent-gold);
+    cursor: pointer;
+    width: 15px;
+    height: 15px;
+  }
+
+  /* 주문번호 */
+  .ord-id {
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--accent-gold-lt);
+    font-size: 12.5px;
+    font-weight: 600;
+  }
+
+  /* 회원 셀 */
+  .ord-user {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .ord-user-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 13px;
+    flex-shrink: 0;
+  }
+  .ord-user-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 2px;
+  }
+  .ord-user-tier {
+    font-size: 10px;
+    padding: 1px 6px;
+    border-radius: 3px;
+    display: inline-block;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+  }
+  .tier-vip {
+    background: rgba(212,165,116,0.15);
+    color: var(--accent-gold-lt);
+  }
+  .tier-regular {
+    background: rgba(255,255,255,0.05);
+    color: var(--text-muted);
+  }
+
+  /* 서비스 셀 */
+  .ord-service-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 3px;
+  }
+  .ord-service-desc {
+    font-size: 11.5px;
+    color: var(--text-muted);
+  }
+
+  /* 금액 */
+  .ord-amount {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-primary);
+    text-align: right;
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: -0.3px;
+  }
+  .ord-amount.ord-refund {
+    color: var(--accent-red);
+    text-decoration: line-through;
+    text-decoration-color: rgba(232,85,85,0.5);
+  }
+
+  /* 날짜 */
+  .ord-date {
+    font-size: 12.5px;
+    color: var(--text-primary);
+  }
+  .ord-date-sub {
+    font-size: 10.5px;
+    color: var(--text-muted);
+    margin-top: 2px;
+  }
+
+  /* 상태 뱃지 */
+  .ord-status {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 5px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    white-space: nowrap;
+  }
+  .status-pending {
+    background: rgba(255,152,0,0.12);
+    color: var(--accent-warn);
+  }
+  .status-progress {
+    background: rgba(41,182,246,0.12);
+    color: var(--accent-blue);
+  }
+  .status-done {
+    background: rgba(76,175,80,0.12);
+    color: var(--accent-green);
+  }
+  .status-cancel {
+    background: rgba(255,255,255,0.05);
+    color: var(--text-muted);
+  }
+  .status-refund {
+    background: rgba(232,85,85,0.12);
+    color: var(--accent-red);
+  }
+
+  /* 액션 버튼 */
+  .ord-actions {
+    display: flex;
+    gap: 4px;
+    justify-content: flex-end;
+  }
+  .ord-action-btn {
+    width: 28px;
+    height: 28px;
+    border-radius: 5px;
+    border: 1px solid var(--border);
+    background: var(--bg-body);
+    color: var(--text-secondary);
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 700;
+    transition: all 0.15s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: inherit;
+  }
+  .ord-action-btn:hover {
+    transform: translateY(-1px);
+  }
+  .action-approve:hover, .action-complete:hover {
+    background: var(--accent-green);
+    color: #fff;
+    border-color: var(--accent-green);
+  }
+  .action-cancel:hover {
+    background: var(--accent-red);
+    color: #fff;
+    border-color: var(--accent-red);
+  }
+  .action-view:hover {
+    background: var(--accent-gold);
+    color: #1a1a1e;
+    border-color: var(--accent-gold);
+  }
+
+  /* 하단 페이지네이션 */
+  .ord-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 4px;
+    margin-top: 8px;
+  }
+  .ord-footer-info {
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+  .ord-footer-info b {
+    color: var(--text-primary);
+    font-weight: 700;
+  }
+  .ord-pagination {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+  }
+  .ord-page-btn {
+    padding: 6px 12px;
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    color: var(--text-secondary);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.15s;
+    min-width: 32px;
+  }
+  .ord-page-btn:hover:not(:disabled) {
+    background: var(--bg-hover);
+    color: var(--text-primary);
+    border-color: rgba(212,165,116,0.3);
+  }
+  .ord-page-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+  .ord-page-btn.active {
+    background: var(--accent-gold);
+    color: #1a1a1e;
+    border-color: var(--accent-gold);
+    font-weight: 700;
+  }
+
+  /* 반응형 */
+  @media (max-width: 1024px) {
+    .ord-stats { grid-template-columns: repeat(2, 1fr); }
+    .ord-toolbar { flex-direction: column; align-items: stretch; }
+    .ord-search { width: 100%; }
+    .ord-search:focus { width: 100%; }
+  }
+  @media (max-width: 768px) {
+    .ord-stats { grid-template-columns: 1fr; }
+    .ord-table { font-size: 12px; }
+  }
+</style>
+
+<script>
+  (function() {
+    const container = document.getElementById('ordersPage');
+    if (!container) return;
+
+    // 탭 클릭 → 필터 (시각적으로만)
+    container.querySelectorAll('.ord-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        container.querySelectorAll('.ord-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+      });
+    });
+
+    // 전체 선택 체크박스
+    const chkAll = container.querySelector('#chkAll');
+    const rowChecks = container.querySelectorAll('.row-check');
+    if (chkAll) {
+      chkAll.addEventListener('change', () => {
+        rowChecks.forEach(c => c.checked = chkAll.checked);
+      });
+    }
+
+    // 액션 버튼 임시 알림 (실제 로직은 나중에)
+    container.querySelectorAll('.ord-action-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const action = btn.className.includes('action-approve') ? '승인'
+          : btn.className.includes('action-cancel') ? '취소'
+          : btn.className.includes('action-complete') ? '완료 처리'
+          : '상세 조회';
+        // 토스트 표시 시도
+        const orderId = btn.closest('tr').querySelector('.ord-id')?.textContent || '';
+        alert(`${orderId} - ${action} 처리 (기능 준비 중)`);
+      });
+    });
+
+    // 페이지네이션 클릭
+    container.querySelectorAll('.ord-page-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (btn.disabled) return;
+        if (btn.textContent.match(/^\d+$/)) {
+          container.querySelectorAll('.ord-page-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+        }
+      });
+    });
+  })();
+</script>
