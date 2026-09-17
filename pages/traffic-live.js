@@ -287,11 +287,9 @@ export function init(container) {
 
   const onMouseDown = (e) => {
     const cell = e.target.closest('td');
-    console.log('[DEBUG] mousedown - cell:', !!cell, 'ctrl:', e.ctrlKey);
     if (!cell) return;
     const multi = e.ctrlKey || e.metaKey;
     if (multi) {
-      console.log('[DEBUG] Ctrl+클릭 모드 시작');
       if (document.activeElement?.closest('.rtd-table')) document.activeElement.blur();
       clearSelection();
       startCell = cell;
@@ -303,7 +301,6 @@ export function init(container) {
       document.addEventListener('mouseup', onMouseUp);
       e.preventDefault();
       e.stopPropagation();
-      console.log('[DEBUG] startCell 설정됨:', startCell?.textContent);
     } else {
       clearSelection();
       cell.classList.add('selected');
@@ -312,16 +309,13 @@ export function init(container) {
   };
 
   const onMouseMove = (e) => {
-    if (!startCell) { console.log('[DEBUG] onMouseMove: startCell 없음'); return; }
-    if (!e.ctrlKey && !e.metaKey) { console.log('[DEBUG] Ctrl 놓음 - 종료'); onMouseUp(); return; }
+    if (!startCell) return;
+    if (!e.ctrlKey && !e.metaKey) { onMouseUp(); return; }
     const cell = e.target.closest('td');
-    if (!cell) { console.log('[DEBUG] onMouseMove: 셀 아님'); return; }
-    if (cell === lastMoveEndCell) return;
-    console.log('[DEBUG] onMouseMove - 새 셀:', cell.textContent);
+    if (!cell || cell === lastMoveEndCell) return;
     endCell = cell;
     lastMoveEndCell = cell;
     selectRange(coordOf(startCell), coordOf(endCell));
-    console.log('[DEBUG] selectRange 후 selectedCells 크기:', selectedCells.size);
     drawBox(startCell, endCell);
     isDragging = true;
   };
