@@ -1,22 +1,17 @@
 /**
- * 실시간 데이터 페이지 - 편집 기능 통합
+ * 실시간 데이터 페이지 - 엑셀 스타일 편집
  *
- * 포함 기능:
- * - Ctrl/Cmd 드래그로 셀 다중 선택
- * - 색상 팔레트 40색 (글자색/배경색)
- * - 폰트 크기 조절
- * - 문구 편집 (상단/하단)
- * - 행/열 추가·삭제
- * - 복사·붙여넣기
- * - 자동저장 (localStorage)
- * - Undo/Redo (Ctrl+Z, Ctrl+Y, 50단계)
- * - 이미지 다운로드 (선택 영역 / 전체)
- * - 토스트 알림
- * - ESC로 선택 해제
+ * 조작법:
+ * - 한 번 클릭 → 셀 선택 (드래그로 여러 셀 선택 가능)
+ * - 더블 클릭 → 편집 모드
+ * - Ctrl+C → 복사
+ * - Ctrl+V → 붙여넣기
+ * - Ctrl+Z / Ctrl+Y → Undo / Redo
+ * - Delete → 셀 내용 삭제
+ * - ESC → 선택 해제 / 편집 종료
  */
 import { toast } from '../js/toast.js';
 
-// html2canvas 동적 로드
 function loadHtml2canvas() {
   return new Promise((resolve, reject) => {
     if (window.html2canvas) return resolve(window.html2canvas);
@@ -28,7 +23,6 @@ function loadHtml2canvas() {
   });
 }
 
-// 페이지 전용 CSS 로드
 function loadPageCss() {
   const HREF = 'css/traffic-live.css';
   if (document.querySelector(`link[href="${HREF}"]`)) return;
@@ -38,12 +32,10 @@ function loadPageCss() {
   document.head.appendChild(link);
 }
 
-// ═══════════════════════════════════════════════
 export function init(container) {
   loadPageCss();
   loadHtml2canvas().catch(() => toast('이미지 다운로드 기능을 준비하지 못했습니다.', 'warning'));
 
-  // ── DOM ──
   const table = container.querySelector('#rtdTable');
   const selectionBox = container.querySelector('#selectionBox');
   const palette = container.querySelector('#rtdPalette');
@@ -58,7 +50,6 @@ export function init(container) {
   const toolsEl = container.querySelector('#rtdTools');
   const submenu = container.querySelector('#rtdSubmenu');
 
-  // ── 상수 ──
   const COLORS = [
     '#FFFFFF', '#000000', '#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#00FFFF', '#FF00FF',
     '#FFA500', '#800080', '#008000', '#808000', '#000080', '#800000', '#C0C0C0', '#808080',
@@ -66,14 +57,13 @@ export function init(container) {
     '#A0522D', '#D2B48C', '#87CEEB', '#F08080', '#4682B4', '#DA70D6', '#B0C4DE', '#F4A460',
     '#5F9EA0', '#DDA0DD', '#7FFF00', '#6495ED', '#DC143C', '#FF8C00', '#9ACD32', '#40E0D0',
   ];
-  const STORAGE_KEY = 'banada_rtd_state_v1';
+  const STORAGE_KEY = 'banada_rtd_state_v2';
   const HISTORY_LIMIT = 50;
 
-  // ── 상태 ──
   let startCell = null, endCell = null;
   const selectedCells = new Set();
   let isDragging = false;
-  let lastMoveEndCell = null;
+  let editingCell = null;  // 현재 편집 중인 셀
   let autoSave = true;
   let saveTimer = null;
   let undoStack = [];
@@ -81,7 +71,10 @@ export function init(container) {
   let isApplyingHistory = false;
   let historyTimer = null;
 
-  // ═════════════ 팔레트 초기화 ═════════════
+  // 내부 클립보드 (엑셀처럼 복잡한 스타일 유지)
+  let internalClipboard = null;
+
+  // ═════════════ 팔레트 ═════════════
   COLORS.forEach(c => {
     const d = document.createElement('div');
     d.className = 'rtd-swatch';
@@ -97,8 +90,7 @@ export function init(container) {
     saveStatus.className = state || '';
     saveStatus.textContent = state === 'saving' ? '💾 저장 중...'
       : state === 'saved' ? '✓ 저장됨'
-      : state === 'error' ? '⚠ 저장 실패'
-      : '';
+      : state === 'error' ? '⚠ 저장 실패' : '';
     if (state === 'saved') {
       setTimeout(() => {
         if (saveStatus.textContent === '✓ 저장됨') {
@@ -119,7 +111,6 @@ export function init(container) {
         fontSize: fontSizeInput.value,
         submenuIdx: Array.from(submenu.querySelectorAll('.rtd-submenu-item'))
           .findIndex(el => el.classList.contains('active')),
-        savedAt: Date.now(),
       };
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
       setSaveStatus('saved');
@@ -149,13 +140,10 @@ export function init(container) {
         items.forEach(i => i.classList.remove('active'));
         items[s.submenuIdx]?.classList.add('active');
       }
-      // contentEditable 재적용
-      table.querySelectorAll('td').forEach(td => { td.contentEditable = 'true'; });
+      // 셀은 기본적으로 편집 불가 (더블클릭 시만 활성화)
+      table.querySelectorAll('td').forEach(td => { td.contentEditable = 'false'; });
       return true;
-    } catch (e) {
-      console.error(e);
-      return false;
-    }
+    } catch (e) { console.error(e); return false; }
   };
 
   // ═════════════ Undo/Redo ═════════════
@@ -172,15 +160,16 @@ export function init(container) {
     noticeTop.innerHTML = snap.topNotice;
     noticeBottom.innerHTML = snap.bottomNotice;
     if (editTop) editTop.value = stripHtml(snap.topNotice);
-    if (editBottom) editBottom.value = snap.bottomNotice.replace(/<br\s*\/?>/g, '\n').replace(/<[^>]+>/g, m => (m === '<b>' || m === '</b>' ? m : '')).trim();
-    table.querySelectorAll('td').forEach(td => { td.contentEditable = 'true'; });
+    if (editBottom) editBottom.value = snap.bottomNotice
+      .replace(/<br\s*\/?>/gi, '\n').replace(/<\/?b>/gi, '').replace(/<[^>]+>/g, '').trim();
+    table.querySelectorAll('td').forEach(td => { td.contentEditable = 'false'; });
     clearSelection();
     updateUndoRedoUI();
     setTimeout(() => { isApplyingHistory = false; }, 0);
   };
 
   const updateUndoRedoUI = () => {
-    if (undoBtn) undoBtn.disabled = undoStack.length <= 1;  // 초기 상태 하나는 남겨둠
+    if (undoBtn) undoBtn.disabled = undoStack.length <= 1;
     if (redoBtn) redoBtn.disabled = redoStack.length === 0;
   };
 
@@ -203,21 +192,15 @@ export function init(container) {
   };
 
   const undo = () => {
-    if (undoStack.length <= 1) {
-      toast('되돌릴 작업이 없습니다.', 'warning');
-      return;
-    }
+    if (undoStack.length <= 1) { toast('되돌릴 작업이 없습니다.', 'warning'); return; }
     redoStack.push(snapshot());
-    undoStack.pop();  // 현재 상태 제거
+    undoStack.pop();
     applySnapshot(undoStack[undoStack.length - 1]);
     toast('되돌렸습니다', 'info', 1200);
   };
 
   const redo = () => {
-    if (redoStack.length === 0) {
-      toast('다시 실행할 작업이 없습니다.', 'warning');
-      return;
-    }
+    if (redoStack.length === 0) { toast('다시 실행할 작업이 없습니다.', 'warning'); return; }
     const next = redoStack.pop();
     undoStack.push(next);
     applySnapshot(next);
@@ -227,7 +210,7 @@ export function init(container) {
   const stripHtml = (s) => {
     const d = document.createElement('div');
     d.innerHTML = s;
-    return d.textContent || '';
+    return (d.textContent || '').trim();
   };
 
   const triggerSave = () => {
@@ -235,13 +218,21 @@ export function init(container) {
     pushHistory();
   };
 
-  // ═════════════ 선택 ═════════════
+  // ═════════════ 선택 (엑셀 스타일) ═════════════
   const clearSelection = () => {
     selectedCells.forEach(c => c.classList.remove('selected'));
     selectedCells.clear();
     selectionBox.style.display = 'none';
     startCell = null;
     endCell = null;
+  };
+
+  const exitEditMode = () => {
+    if (editingCell) {
+      editingCell.contentEditable = 'false';
+      editingCell.blur();
+      editingCell = null;
+    }
   };
 
   const coordOf = (cell) => ({
@@ -252,7 +243,7 @@ export function init(container) {
   const selectRange = (a, b) => {
     const r1 = Math.min(a.r, b.r), r2 = Math.max(a.r, b.r);
     const c1 = Math.min(a.c, b.c), c2 = Math.max(a.c, b.c);
-    // ★ [수정] 기존 선택만 시각적으로 해제 (startCell/endCell은 유지!)
+    // 시각적 선택만 초기화 (startCell 유지)
     selectedCells.forEach(c => c.classList.remove('selected'));
     selectedCells.clear();
     for (let r = r1; r <= r2; r++) {
@@ -285,39 +276,41 @@ export function init(container) {
     selectionBox.style.display = 'block';
   };
 
+  // ═════════════ 마우스 이벤트 (엑셀 스타일) ═════════════
   const onMouseDown = (e) => {
     const cell = e.target.closest('td');
     if (!cell) return;
-    const multi = e.ctrlKey || e.metaKey;
-    if (multi) {
-      if (document.activeElement?.closest('.rtd-table')) document.activeElement.blur();
-      clearSelection();
-      startCell = cell;
-      endCell = cell;
-      cell.classList.add('selected');
-      selectedCells.add(cell);
-      table.classList.add('disable-select');
-      document.addEventListener('mousemove', onMouseMove);
-      document.addEventListener('mouseup', onMouseUp);
-      e.preventDefault();
-      e.stopPropagation();
-    } else {
-      clearSelection();
-      cell.classList.add('selected');
-      selectedCells.add(cell);
-    }
+
+    // 편집 중인 셀 안에서 클릭한 경우는 편집 계속
+    if (editingCell === cell) return;
+
+    // 편집 중이던 다른 셀은 종료
+    exitEditMode();
+
+    clearSelection();
+    startCell = cell;
+    endCell = cell;
+    cell.classList.add('selected');
+    selectedCells.add(cell);
+
+    table.classList.add('disable-select');
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
+
+    e.preventDefault();
   };
 
   const onMouseMove = (e) => {
     if (!startCell) return;
-    if (!e.ctrlKey && !e.metaKey) { onMouseUp(); return; }
     const cell = e.target.closest('td');
-    if (!cell || cell === lastMoveEndCell) return;
+    if (!cell) return;
+    if (cell === endCell) return;
     endCell = cell;
-    lastMoveEndCell = cell;
     selectRange(coordOf(startCell), coordOf(endCell));
-    drawBox(startCell, endCell);
-    isDragging = true;
+    if (selectedCells.size > 1) {
+      drawBox(startCell, endCell);
+      isDragging = true;
+    }
   };
 
   const onMouseUp = () => {
@@ -326,10 +319,25 @@ export function init(container) {
     table.classList.remove('disable-select');
     selectionBox.style.display = 'none';
     if (isDragging) setTimeout(() => { isDragging = false; }, 0);
-    lastMoveEndCell = null;
+  };
+
+  // 더블클릭 → 편집 모드
+  const onDoubleClick = (e) => {
+    const cell = e.target.closest('td');
+    if (!cell) return;
+    editingCell = cell;
+    cell.contentEditable = 'true';
+    cell.focus();
+    // 텍스트 전체 선택
+    const range = document.createRange();
+    range.selectNodeContents(cell);
+    const sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
   };
 
   table.addEventListener('mousedown', onMouseDown);
+  table.addEventListener('dblclick', onDoubleClick);
   table.addEventListener('input', triggerSave);
   noticeTop.addEventListener('input', triggerSave);
   noticeBottom.addEventListener('input', triggerSave);
@@ -337,7 +345,7 @@ export function init(container) {
   // ═════════════ 색상/폰트 ═════════════
   const applyColor = (color) => {
     if (selectedCells.size === 0) {
-      toast('먼저 셀을 Ctrl/Cmd 드래그로 선택하세요.', 'warning');
+      toast('먼저 셀을 선택하세요. (드래그로 여러 셀 선택 가능)', 'warning');
       return;
     }
     const target = container.querySelector('input[name="rtdColorTarget"]:checked').value;
@@ -350,7 +358,7 @@ export function init(container) {
 
   container.querySelector('#rtdApplyFont').addEventListener('click', () => {
     if (selectedCells.size === 0) {
-      toast('먼저 셀을 Ctrl/Cmd 드래그로 선택하세요.', 'warning');
+      toast('먼저 셀을 선택하세요.', 'warning');
       return;
     }
     const size = fontSizeInput.value + 'px';
@@ -361,14 +369,15 @@ export function init(container) {
   // ═════════════ 문구 편집 ═════════════
   editTop.value = stripHtml(noticeTop.innerHTML);
   editBottom.value = noticeBottom.innerHTML
-    .replace(/<br\s*\/?>/g, '\n')
-    .replace(/<b>|<\/b>/g, '')
+    .replace(/<br\s*\/?>/gi, '\n')
+    .replace(/<\/?b>/gi, '')
+    .replace(/<[^>]+>/g, '')
     .trim();
 
   container.querySelector('#rtdApplyText').addEventListener('click', () => {
     noticeTop.textContent = editTop.value;
     noticeBottom.innerHTML = editBottom.value
-      .replace(/</g, '&lt;')
+      .replace(/</g, '&lt;').replace(/>/g, '&gt;')
       .replace(/\[중요 공지\]/g, '<b>[중요 공지]</b>')
       .replace(/\n/g, '<br>');
     toast('문구를 저장했습니다.', 'success');
@@ -381,7 +390,7 @@ export function init(container) {
     const tr = table.tBodies[0].insertRow();
     for (let i = 0; i < cols; i++) {
       const td = tr.insertCell();
-      td.contentEditable = 'true';
+      td.contentEditable = 'false';
       td.textContent = '';
     }
     triggerSave();
@@ -392,7 +401,7 @@ export function init(container) {
     if (!confirm('모든 행에 새 열을 추가하시겠습니까?')) return;
     Array.from(table.rows).forEach(row => {
       const td = row.insertCell();
-      td.contentEditable = 'true';
+      td.contentEditable = 'false';
       td.textContent = row.rowIndex === 0 ? '새 열' : '';
     });
     triggerSave();
@@ -400,7 +409,7 @@ export function init(container) {
   });
 
   container.querySelector('#rtdDelRow').addEventListener('click', () => {
-    // ★ [수정] 선택된 셀에서 헤더(<thead>) 셀은 미리 제외
+    // 헤더 셀 미리 제외
     const validSelectedCells = Array.from(selectedCells).filter(c => {
       const row = c.closest('tr');
       return row && row.parentElement !== table.tHead;
@@ -409,7 +418,6 @@ export function init(container) {
     validSelectedCells.forEach(c => rowIdx.add(c.closest('tr').rowIndex));
 
     if (rowIdx.size === 0) {
-      // 선택된 데이터 행이 없으면 마지막 데이터 행 삭제
       const rows = table.tBodies[0].rows;
       if (rows.length === 0) return toast('삭제할 행이 없습니다.', 'info');
       if (!confirm('마지막 데이터 행을 삭제하시겠습니까?')) return;
@@ -419,14 +427,12 @@ export function init(container) {
       toast('행을 삭제했습니다.', 'success');
       return;
     }
-    if (!confirm(`선택된 ${rowIdx.size}개 행을 삭제하시겠습니까? (헤더는 자동 제외)`)) return;
-    // ★ 큰 인덱스부터 삭제 (인덱스 밀림 방지)
+    if (!confirm(`선택된 ${rowIdx.size}개 행을 삭제하시겠습니까? (헤더 자동 제외)`)) return;
     const sorted = Array.from(rowIdx).sort((a, b) => b - a);
     let deleted = 0;
     for (const idx of sorted) {
       const row = table.rows[idx];
       if (!row) continue;
-      // ★ [안전장치] thead의 행은 절대 삭제 안 함
       if (row.parentElement === table.tHead) continue;
       if (row.parentElement?.tagName === 'THEAD') continue;
       row.remove();
@@ -436,8 +442,6 @@ export function init(container) {
     if (deleted > 0) {
       triggerSave();
       toast(`${deleted}개 행을 삭제했습니다.`, 'success');
-    } else {
-      toast('삭제할 수 있는 데이터 행이 없습니다. (헤더는 삭제 불가)', 'warning');
     }
   });
 
@@ -475,10 +479,10 @@ export function init(container) {
     triggerSave();
   });
 
-  // ═════════════ 클립보드 ═════════════
-  container.querySelector('#rtdCopy').addEventListener('click', async () => {
+  // ═════════════ 클립보드 (엑셀 스타일 - Ctrl+C/V) ═════════════
+  const copyToClipboard = async () => {
     if (selectedCells.size === 0) {
-      toast('먼저 셀을 Ctrl/Cmd 드래그로 선택하세요.', 'warning');
+      toast('먼저 셀을 선택하세요.', 'warning');
       return;
     }
     const cells = Array.from(selectedCells).sort((a, b) => {
@@ -489,47 +493,56 @@ export function init(container) {
     const data = cells.map(c => {
       const co = coordOf(c);
       return {
-        r: co.r - base.r,
-        c: co.c - base.c,
+        r: co.r - base.r, c: co.c - base.c,
         html: c.innerHTML,
         color: c.style.color || '',
         bg: c.style.backgroundColor || '',
         fontSize: c.style.fontSize || '',
       };
     });
-    try {
-      await navigator.clipboard.writeText(JSON.stringify({ type: 'rtd_clip', data }));
-      toast(`${cells.length}개 셀을 복사했습니다.`, 'success');
-    } catch (e) {
-      toast('클립보드 접근 실패', 'error');
-    }
-  });
+    // 내부 클립보드에 저장 (스타일 유지)
+    internalClipboard = data;
 
-  container.querySelector('#rtdPaste').addEventListener('click', async () => {
+    // OS 클립보드에도 텍스트 저장 (엑셀 등으로 붙여넣기 가능)
     try {
-      const clip = JSON.parse(await navigator.clipboard.readText());
-      if (clip.type !== 'rtd_clip') throw new Error('형식 불일치');
-      const target = selectedCells.size === 1 ? Array.from(selectedCells)[0] : table.rows[1]?.cells[0];
-      if (!target) return toast('붙여넣을 위치가 없습니다.', 'warning');
-      const base = coordOf(target);
-      let applied = 0;
-      clip.data.forEach(d => {
-        const row = table.rows[base.r + d.r];
-        if (!row) return;
-        const cell = row.cells[base.c + d.c];
-        if (!cell) return;
-        cell.innerHTML = d.html;
-        if (d.color) cell.style.color = d.color;
-        if (d.bg) cell.style.backgroundColor = d.bg;
-        if (d.fontSize) cell.style.fontSize = d.fontSize;
-        applied++;
+      const rowMap = new Map();
+      cells.forEach(c => {
+        const co = coordOf(c);
+        const r = co.r - base.r;
+        if (!rowMap.has(r)) rowMap.set(r, []);
+        rowMap.get(r).push(c.textContent);
       });
-      toast(`${applied}개 셀을 붙여넣었습니다.`, 'success');
-      triggerSave();
-    } catch (e) {
-      toast('붙여넣을 데이터가 없거나 형식이 잘못됐습니다.', 'error');
+      const text = Array.from(rowMap.values())
+        .map(row => row.join('\t')).join('\n');
+      await navigator.clipboard.writeText(text);
+    } catch (e) {}
+
+    toast(`${cells.length}개 셀 복사됨`, 'success', 1200);
+  };
+
+  const pasteFromClipboard = () => {
+    if (!internalClipboard) {
+      toast('복사된 내용이 없습니다.', 'warning');
+      return;
     }
-  });
+    const target = selectedCells.size >= 1 ? Array.from(selectedCells)[0] : table.rows[1]?.cells[0];
+    if (!target) return toast('붙여넣을 위치가 없습니다.', 'warning');
+    const base = coordOf(target);
+    let applied = 0;
+    internalClipboard.forEach(d => {
+      const row = table.rows[base.r + d.r];
+      if (!row) return;
+      const cell = row.cells[base.c + d.c];
+      if (!cell) return;
+      cell.innerHTML = d.html;
+      if (d.color) cell.style.color = d.color;
+      if (d.bg) cell.style.backgroundColor = d.bg;
+      if (d.fontSize) cell.style.fontSize = d.fontSize;
+      applied++;
+    });
+    toast(`${applied}개 셀 붙여넣기 완료`, 'success', 1200);
+    triggerSave();
+  };
 
   // ═════════════ 저장 ═════════════
   const autoBtn = container.querySelector('#rtdAutoSaveToggle');
@@ -542,7 +555,7 @@ export function init(container) {
 
   container.querySelector('#rtdSaveNow').addEventListener('click', () => {
     saveState();
-    toast('현재 상태를 저장했습니다.', 'success');
+    toast('저장 완료', 'success');
   });
 
   container.querySelector('#rtdReset').addEventListener('click', () => {
@@ -551,16 +564,12 @@ export function init(container) {
     location.reload();
   });
 
-  // ═════════════ Undo/Redo 버튼 ═════════════
   undoBtn.addEventListener('click', undo);
   redoBtn.addEventListener('click', redo);
 
   // ═════════════ 이미지 다운로드 ═════════════
   container.querySelector('#rtdDlSelection').addEventListener('click', async () => {
-    if (selectedCells.size === 0) {
-      toast('먼저 셀을 Ctrl/Cmd 드래그로 선택하세요.', 'warning');
-      return;
-    }
+    if (selectedCells.size === 0) { toast('먼저 셀을 선택하세요.', 'warning'); return; }
     const h2c = await loadHtml2canvas().catch(() => null);
     if (!h2c) return toast('이미지 라이브러리를 로드하지 못했습니다.', 'error');
     selectionBox.style.display = 'none';
@@ -568,75 +577,57 @@ export function init(container) {
     let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
     cells.forEach(c => {
       const r = c.getBoundingClientRect();
-      minX = Math.min(minX, r.left);
-      minY = Math.min(minY, r.top);
-      maxX = Math.max(maxX, r.right);
-      maxY = Math.max(maxY, r.bottom);
+      minX = Math.min(minX, r.left); minY = Math.min(minY, r.top);
+      maxX = Math.max(maxX, r.right); maxY = Math.max(maxY, r.bottom);
     });
     const wrapRect = container.querySelector('.rtd-table-wrap').getBoundingClientRect();
     try {
       const canvas = await h2c(table, {
-        x: minX - wrapRect.left,
-        y: minY - wrapRect.top,
-        width: maxX - minX,
-        height: maxY - minY,
-        scale: 2,
-        backgroundColor: '#2b4a6b',
-        logging: false,
+        x: minX - wrapRect.left, y: minY - wrapRect.top,
+        width: maxX - minX, height: maxY - minY,
+        scale: 2, backgroundColor: '#2b4a6b', logging: false,
       });
       const link = document.createElement('a');
       link.href = canvas.toDataURL('image/png');
       link.download = 'banada_data_selection.png';
       link.click();
-      toast('선택 영역을 다운로드했습니다.', 'success');
-    } catch (e) {
-      console.error(e);
-      toast('이미지 다운로드에 실패했습니다.', 'error');
-    }
+      toast('선택 영역 다운로드 완료', 'success');
+    } catch (e) { console.error(e); toast('이미지 다운로드 실패', 'error'); }
   });
 
   container.querySelector('#rtdDlFull').addEventListener('click', async () => {
     const h2c = await loadHtml2canvas().catch(() => null);
     if (!h2c) return toast('이미지 라이브러리를 로드하지 못했습니다.', 'error');
-    // 도구 패널 잠깐 숨김
     const prevDisplay = toolsEl.style.display;
     toolsEl.style.display = 'none';
     selectionBox.style.display = 'none';
     const main = container.querySelector('.rtd-main');
-    // grid 컬럼 임시로 바꿔서 메인만 전체 너비 차지
     const layout = container.querySelector('.rtd-layout');
     const prevGrid = layout.style.gridTemplateColumns;
     layout.style.gridTemplateColumns = '1fr';
-    // 스크롤 위로
     window.scrollTo(0, 0);
-    await new Promise(r => setTimeout(r, 100));  // 레이아웃 재계산 대기
+    await new Promise(r => setTimeout(r, 100));
     try {
       const canvas = await h2c(main, {
-        scale: 2,
-        backgroundColor: '#1a1420',
-        logging: false,
-        useCORS: true,
+        scale: 2, backgroundColor: '#1a1420', logging: false, useCORS: true,
       });
       const link = document.createElement('a');
       link.href = canvas.toDataURL('image/png');
       link.download = 'banada_realtime_data.png';
       link.click();
-      toast('전체 화면을 다운로드했습니다.', 'success');
-    } catch (e) {
-      console.error(e);
-      toast('이미지 다운로드에 실패했습니다.', 'error');
+      toast('전체 화면 다운로드 완료', 'success');
+    } catch (e) { console.error(e); toast('이미지 다운로드 실패', 'error');
     } finally {
       toolsEl.style.display = prevDisplay;
       layout.style.gridTemplateColumns = prevGrid;
     }
   });
 
-  // ═════════════ 도구 접기/펼치기 ═════════════
+  // ═════════════ 도구 접기 & 서브메뉴 ═════════════
   container.querySelector('#rtdToolsToggle').addEventListener('click', () => {
     toolsEl.classList.toggle('collapsed');
   });
 
-  // ═════════════ 서브 메뉴 ═════════════
   submenu.addEventListener('click', (e) => {
     const btn = e.target.closest('.rtd-submenu-item');
     if (!btn) return;
@@ -646,19 +637,23 @@ export function init(container) {
   });
 
   // ═════════════ 전역 이벤트 ═════════════
-  const clickHandler = (e) => {
+  document.addEventListener('click', (e) => {
     if (isDragging) return;
     const t = e.target;
     if (t.closest('.rtd-table') || t.closest('.rtd-tools') || t.closest('#toastContainer')) return;
     clearSelection();
-  };
-  document.addEventListener('click', clickHandler);
+    exitEditMode();
+  });
 
-  const keyHandler = (e) => {
-    // ESC로 선택 해제
+  document.addEventListener('keydown', (e) => {
+    const active = document.activeElement;
+    const inInput = active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA');
+
+    // ESC → 편집 종료 / 선택 해제
     if (e.key === 'Escape') {
-      if (document.activeElement?.closest('.rtd-table')) {
-        document.activeElement.blur();
+      if (editingCell) {
+        exitEditMode();
+        e.preventDefault();
         return;
       }
       if (selectedCells.size > 0) {
@@ -667,23 +662,78 @@ export function init(container) {
       }
       return;
     }
-    // Ctrl+Z / Y (편집 중인 input에선 제외)
-    const active = document.activeElement;
-    if (active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA')) return;
+
+    // 편집 중이거나 input/textarea에 포커스 있으면 여기서 스킵
+    if (inInput) return;
+    if (editingCell) return;
+
     const ctrl = e.ctrlKey || e.metaKey;
-    if (!ctrl) return;
-    if (e.key === 'z' && !e.shiftKey) { e.preventDefault(); undo(); }
-    else if (e.key === 'y' || (e.key === 'z' && e.shiftKey)) { e.preventDefault(); redo(); }
-  };
-  document.addEventListener('keydown', keyHandler);
+
+    // Ctrl+C 복사
+    if (ctrl && e.key === 'c') {
+      if (selectedCells.size > 0) {
+        e.preventDefault();
+        copyToClipboard();
+      }
+      return;
+    }
+
+    // Ctrl+V 붙여넣기
+    if (ctrl && e.key === 'v') {
+      if (selectedCells.size > 0) {
+        e.preventDefault();
+        pasteFromClipboard();
+      }
+      return;
+    }
+
+    // Ctrl+Z Undo
+    if (ctrl && e.key === 'z' && !e.shiftKey) {
+      e.preventDefault();
+      undo();
+      return;
+    }
+
+    // Ctrl+Y or Ctrl+Shift+Z Redo
+    if (ctrl && (e.key === 'y' || (e.key === 'z' && e.shiftKey))) {
+      e.preventDefault();
+      redo();
+      return;
+    }
+
+    // Delete/Backspace → 선택된 셀 내용 삭제
+    if ((e.key === 'Delete' || e.key === 'Backspace') && selectedCells.size > 0) {
+      e.preventDefault();
+      selectedCells.forEach(c => { c.textContent = ''; });
+      triggerSave();
+      return;
+    }
+
+    // Enter → 첫 번째 선택된 셀 편집 모드
+    if (e.key === 'Enter' && selectedCells.size > 0) {
+      e.preventDefault();
+      const first = Array.from(selectedCells)[0];
+      editingCell = first;
+      first.contentEditable = 'true';
+      first.focus();
+      const range = document.createRange();
+      range.selectNodeContents(first);
+      const sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(range);
+      return;
+    }
+  });
 
   // ═════════════ 초기화 ═════════════
+  // 시작할 때 모든 셀 편집 불가로 (더블클릭 시만 편집)
+  table.querySelectorAll('td').forEach(td => { td.contentEditable = 'false'; });
+
   const restored = loadState();
-  pushHistoryNow();  // 초기 상태를 히스토리에 저장
+  pushHistoryNow();
   updateUndoRedoUI();
   if (restored) toast('저장된 편집 데이터를 복원했습니다.', 'info', 1500);
 
-  // 페이지 이탈 시 정리 (SPA에서 페이지 바뀔 때)
   window.addEventListener('beforeunload', () => {
     if (autoSave) saveState();
   });
