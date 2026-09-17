@@ -1,16 +1,239 @@
-<div class="page-header">
-  <div>
-    <h1 class="page-title">📊 이벤트 참여 현황</h1>
-    <p class="page-subtitle">진행 중인 이벤트 참여자 현황</p>
-  </div>
-</div>
+<!-- ═══════════════════════════════════════════════
+     실시간 오류 - BANADA 스타일 편집 대시보드
+     상단: 회원 상태 테이블 / 하단: 주문 오류 테이블
+     ═══════════════════════════════════════════════ -->
 
-<div class="card">
-  <div class="empty-state">
-    <div class="icon">🚧</div>
-    <div class="text">이 페이지는 준비 중입니다.</div>
-    <div style="margin-top: 12px; color: var(--text-muted); font-size: 12px;">
-      pages/events-status.html 파일에서 콘텐츠를 편집하세요.
+<div class="rtd-layout">
+  <!-- ─────────── 왼쪽: 데이터 영역 ─────────── -->
+  <div class="rtd-main">
+
+    <!-- 상단 서브 메뉴 -->
+    <div class="rtd-submenu" id="rtdSubmenu">
+      <button class="rtd-submenu-item active">BANADA 전국 오류 모니터링</button>
+      <button class="rtd-submenu-item">VIP 회원 결제 오류 관리</button>
+      <button class="rtd-submenu-item">BANADA 데이터 복구실</button>
+    </div>
+
+    <!-- 상단 공지 문구 -->
+    <div class="rtd-notice-top" id="rtdNoticeTop">
+      데이터 정합성 확인 및 실시간 오류 처리 현황입니다.
+      아래 지침에 따라 신속·정확하게 대응해주십시오.
+    </div>
+
+    <!-- 타이틀 -->
+    <h1 class="rtd-title">실시간 오류 현황</h1>
+
+    <!-- 위험 경고 배너 -->
+    <div class="rtd-danger-notice" id="rtdDangerNotice" contenteditable="true">
+      <span class="rtd-danger-mark">⚠ DAMAGE!</span>
+      주의사항 4단계에서 일치 파트너십으로 통합된 유형만을 선택하여 공유 임무를 완료하며,
+      함께 할 때의 금일 결제 금액 후 공동 이익을 마감해야 합니다.
+    </div>
+
+    <!-- ═════ 상단 테이블: 회원 상태 ═════ -->
+    <div class="rtd-table-wrap">
+      <div id="selectionBox"></div>
+      <table class="rtd-table" id="rtdTableTop">
+        <thead>
+          <tr>
+            <td contenteditable="true">회원ID</td>
+            <td contenteditable="true">주문상태</td>
+            <td contenteditable="true">인증상태</td>
+            <td contenteditable="true">활성화 코드</td>
+            <td contenteditable="true">승인된 암호 코드</td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td contenteditable="true">jkgov1203</td>
+            <td contenteditable="true" class="cell-ok">발송 완료</td>
+            <td contenteditable="true" class="cell-ok">승인 완료</td>
+            <td contenteditable="true">NSACT2032897</td>
+            <td contenteditable="true">NBS001001001</td>
+          </tr>
+          <tr>
+            <td contenteditable="true">sxcv4752</td>
+            <td contenteditable="true" class="cell-wait">검수 대기</td>
+            <td contenteditable="true" class="cell-fail">미승인</td>
+            <td contenteditable="true">NSACT2032898</td>
+            <td contenteditable="true">NBS001001002</td>
+          </tr>
+          <tr>
+            <td contenteditable="true">qwerty24689</td>
+            <td contenteditable="true" class="cell-progress">진행 중</td>
+            <td contenteditable="true" class="cell-ok">승인 완료</td>
+            <td contenteditable="true">NSACT2032899</td>
+            <td contenteditable="true">NBS001001003</td>
+          </tr>
+          <tr>
+            <td contenteditable="true">xsgf1575</td>
+            <td contenteditable="true" class="cell-fail">발송 오류</td>
+            <td contenteditable="true" class="cell-fail">비활성화</td>
+            <td contenteditable="true">NSACT2032891</td>
+            <td contenteditable="true">NBS001001004</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 중간 안내 공지 (편집 가능) -->
+    <div class="rtd-middle-notice" id="rtdMiddleNotice" contenteditable="true">1. 위 공동구매 회원들이 클리어 데이터를 지시에 따라 진행하지 못하여 실패로 인해 회원가입 및 계정 비활성화되어 출금불가.
+2. 상호협력의 발전목적을 실천하기 위해 공식적으로 1~2회 연속 클리어수정을 특별히 승인하였으며, 수정주문은 만장일치로 합의되어야 합니다.
+3. 수정주문은 계좌와 계좌 이상 데이터 복구 후 출금 코드를 매니저 갱신을 완료해야 출금가능하며, 데이터 완료 이전에는 현금 출금이 불가능합니다.
+4. 정산시스템에서 승인할 수 없어 출금할 수 없게 되었습니다. 데이터 완료 이전에는 현금 출금이 불가능합니다.
+(예: 부활 포기한 계정의 경우 포인트출금 불가)</div>
+
+    <!-- ═════ 하단 테이블: 주문 유형별 오류 ═════ -->
+    <div class="rtd-table-wrap" style="margin-top: 14px;">
+      <table class="rtd-table" id="rtdTableBottom">
+        <thead>
+          <tr>
+            <td contenteditable="true">주문유형</td>
+            <td contenteditable="true">주문상세</td>
+            <td contenteditable="true">투자금액 (원)</td>
+            <td contenteditable="true">원금+수익금액</td>
+            <td contenteditable="true">보장비율</td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td contenteditable="true">A</td>
+            <td contenteditable="true">[2종택1]</td>
+            <td contenteditable="true" style="color:#ff5252;">1,500,000</td>
+            <td contenteditable="true">1,650,000</td>
+            <td contenteditable="true" style="color:#ff5252;">0%</td>
+          </tr>
+          <tr>
+            <td contenteditable="true">B</td>
+            <td contenteditable="true">[2종택1]</td>
+            <td contenteditable="true">2,500,000</td>
+            <td contenteditable="true">2,750,000</td>
+            <td contenteditable="true" style="color:#4CAF50;">100%</td>
+          </tr>
+          <tr>
+            <td contenteditable="true">C</td>
+            <td contenteditable="true">[2종택1]</td>
+            <td contenteditable="true">0</td>
+            <td contenteditable="true">0</td>
+            <td contenteditable="true" style="color:#ff5252;">0%</td>
+          </tr>
+          <tr>
+            <td contenteditable="true">D</td>
+            <td contenteditable="true">[2종택1]</td>
+            <td contenteditable="true">0</td>
+            <td contenteditable="true">0</td>
+            <td contenteditable="true" style="color:#ff5252;">0%</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 하단 공지 -->
+    <div class="rtd-notice-bottom" id="rtdNoticeBottom">
+      <b>[중요 공지]</b> 오류 로그는 실시간 반영되며, 처리 결과는 담당자 승인 후 확정됩니다.<br>
+      개별 처리로 발생하는 모든 결과 책임은 담당자에게 귀속되오니, 항상 확인하여 주십시오.
     </div>
   </div>
+
+  <!-- ─────────── 오른쪽: 도구 패널 (traffic-live와 동일) ─────────── -->
+  <aside class="rtd-tools" id="rtdTools">
+    <div class="rtd-tools-header">
+      <span>🛠️ 편집 도구</span>
+      <button class="rtd-tools-toggle" id="rtdToolsToggle" title="접기/펼치기">◀</button>
+    </div>
+
+    <div class="rtd-tools-body">
+      <div class="rtd-tools-hint">
+        <b>💡 사용법</b>
+        <p>1. 셀 <b>클릭</b> → 바로 편집</p>
+        <p>2. <span style="color:#29b6f6;">Ctrl/Cmd + 드래그</span> → 여러 셀 선택 후 스타일 적용</p>
+      </div>
+
+      <div class="rtd-tool-section">
+        <div class="rtd-tool-row">
+          <button class="rtd-btn primary" id="rtdUndoBtn" disabled title="Ctrl+Z">↶ 되돌리기</button>
+          <button class="rtd-btn primary" id="rtdRedoBtn" disabled title="Ctrl+Y">↷ 다시 실행</button>
+        </div>
+      </div>
+
+      <div class="rtd-tool-section">
+        <div class="rtd-tool-label">🎨 색상 적용</div>
+        <div class="rtd-radio-row">
+          <label><input type="radio" name="rtdColorTarget" value="text" checked> 글자색</label>
+          <label><input type="radio" name="rtdColorTarget" value="background"> 배경색</label>
+        </div>
+        <div class="rtd-palette" id="rtdPalette"></div>
+      </div>
+
+      <div class="rtd-tool-section">
+        <div class="rtd-tool-label">📏 글꼴 크기</div>
+        <div class="rtd-tool-row">
+          <input type="number" id="rtdFontSize" min="8" max="48" value="14" class="rtd-input">
+          <button class="rtd-btn" id="rtdApplyFont">적용</button>
+        </div>
+      </div>
+
+      <div class="rtd-tool-section">
+        <div class="rtd-tool-label">✏️ 문구 편집</div>
+        <label class="rtd-mini-label">상단 문구</label>
+        <textarea id="rtdEditTop" rows="2" class="rtd-input rtd-textarea"></textarea>
+        <label class="rtd-mini-label">위험 경고 (DAMAGE)</label>
+        <textarea id="rtdEditDanger" rows="2" class="rtd-input rtd-textarea"></textarea>
+        <label class="rtd-mini-label">중간 안내</label>
+        <textarea id="rtdEditMiddle" rows="4" class="rtd-input rtd-textarea"></textarea>
+        <label class="rtd-mini-label">하단 공지</label>
+        <textarea id="rtdEditBottom" rows="3" class="rtd-input rtd-textarea"></textarea>
+        <button class="rtd-btn rtd-btn-full rtd-btn-accent" id="rtdApplyText">문구 적용</button>
+      </div>
+
+      <div class="rtd-tool-section">
+        <div class="rtd-tool-label">📊 행 · 열</div>
+        <div class="rtd-tool-row">
+          <button class="rtd-btn" id="rtdAddRow">+ 행 추가</button>
+          <button class="rtd-btn" id="rtdAddCol">+ 열 추가</button>
+        </div>
+        <div class="rtd-tool-row" style="margin-top: 6px;">
+          <button class="rtd-btn rtd-btn-danger" id="rtdDelRow">− 행 삭제</button>
+          <button class="rtd-btn rtd-btn-danger" id="rtdDelCol">− 열 삭제</button>
+        </div>
+        <div style="font-size: 10px; color: var(--text-muted); margin-top: 6px;">
+          ※ 셀 선택된 테이블에 적용됩니다
+        </div>
+        <button class="rtd-btn rtd-btn-full" id="rtdAutoFit" style="margin-top: 6px; background: #29b6f6; color: #fff;">
+          🔄 열 너비 자동 맞춤
+        </button>
+      </div>
+
+      <div class="rtd-tool-section">
+        <div class="rtd-tool-label">📋 클립보드</div>
+        <div class="rtd-tool-row">
+          <button class="rtd-btn" id="rtdCopy">📄 복사</button>
+          <button class="rtd-btn" id="rtdPaste">📥 붙여넣기</button>
+        </div>
+      </div>
+
+      <div class="rtd-tool-section">
+        <div class="rtd-tool-label">
+          💾 저장 <span id="rtdSaveStatus"></span>
+        </div>
+        <div class="rtd-tool-row">
+          <button class="rtd-btn" id="rtdAutoSaveToggle" style="background: #4CAF50; color: #fff;">자동저장: ON</button>
+          <button class="rtd-btn" id="rtdSaveNow">즉시 저장</button>
+        </div>
+        <button class="rtd-btn rtd-btn-full rtd-btn-danger" id="rtdReset" style="margin-top: 6px;">
+          🗑️ 저장 데이터 초기화
+        </button>
+      </div>
+
+      <div class="rtd-tool-section">
+        <div class="rtd-tool-label">📸 이미지 저장</div>
+        <button class="rtd-btn rtd-btn-full rtd-btn-accent" id="rtdDlSelection">
+          🖼️ 선택 영역 다운로드
+        </button>
+        <button class="rtd-btn rtd-btn-full rtd-btn-accent" id="rtdDlFull" style="margin-top: 6px;">
+          🖼️ 전체 화면 다운로드
+        </button>
+      </div>
+    </div>
+  </aside>
 </div>
