@@ -631,7 +631,7 @@ export function init(container) {
       const canvas = await h2c(table, {
         x: minX - wrapRect.left, y: minY - wrapRect.top,
         width: maxX - minX, height: maxY - minY,
-        scale: 2, backgroundColor: '#2b2b2b', logging: false,
+        scale: 2, backgroundColor: '#26262c', logging: false,
       });
       const link = document.createElement('a');
       link.href = canvas.toDataURL('image/png');
@@ -654,7 +654,7 @@ export function init(container) {
     window.scrollTo(0, 0);
     await new Promise(r => setTimeout(r, 100));
     try {
-      const canvas = await h2c(main, { scale: 2, backgroundColor: '#1a1420', logging: false, useCORS: true });
+      const canvas = await h2c(main, { scale: 2, backgroundColor: '#1a1a1e', logging: false, useCORS: true });
       const link = document.createElement('a');
       link.href = canvas.toDataURL('image/png');
       link.download = 'banada_error_logs.png';

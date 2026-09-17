@@ -1,230 +1,136 @@
 /* ═══════════════════════════════════════════════════════
-   실시간 데이터 페이지 - BANADA 럭셔리 리디자인 v2
-   common.css의 다크퍼플+로즈골드 컨셉과 통일
+   실시간 데이터 페이지 - 미니멀 다크 톤
    ═══════════════════════════════════════════════════════ */
 
-/* 브랜드 컬러 (common.css와 통일) */
 .rtd-layout {
-  --rtd-rose:      #d4a574;
-  --rtd-rose-lt:   #e4b689;
-  --rtd-gold:      #ffdd66;
-  --rtd-gold-lt:   #ffe999;
-  --rtd-plum:      #1a1420;
-  --rtd-plum-lt:   #2a2038;
-  --rtd-plum-dk:   #14101c;
-  --rtd-ruby:      #e63946;
-  --rtd-header:    #3a2c40;
-  --rtd-header-lt: #4a3852;
-  --rtd-row:       #2a2038;
-  --rtd-row-alt:   #221930;
+  --rtd-rose:      #c9a17a;
+  --rtd-rose-lt:   #d4b689;
+  --rtd-gold:      #d4a574;
+  --rtd-gold-lt:   #e4c089;
+  --rtd-bg:        #202024;
+  --rtd-bg-alt:    #26262c;
+  --rtd-header:    #34343c;
+  --rtd-header-lt: #3e3e46;
+  --rtd-row:       #2a2a30;
+  --rtd-row-alt:   #26262c;
+  --rtd-border:    rgba(255, 255, 255, 0.06);
 
   display: grid;
   grid-template-columns: 1fr 320px;
-  gap: 22px;
-  min-height: calc(100vh - var(--topbar-h) - 48px);
+  gap: 20px;
+  padding: 4px;
 }
 
-/* ─────────── 왼쪽 메인 영역 (럭셔리 프레임) ─────────── */
+/* ─────────── 왼쪽 메인 영역 (미니멀) ─────────── */
 .rtd-main {
   position: relative;
-  background:
-    radial-gradient(ellipse at top, rgba(212,165,116,0.08), transparent 65%),
-    radial-gradient(ellipse at bottom right, rgba(176,133,224,0.05), transparent 60%),
-    linear-gradient(180deg, var(--rtd-plum), var(--rtd-plum-dk));
-  border: 2px solid var(--rtd-rose);
-  border-radius: 18px;
-  padding: 28px 32px;
-  box-shadow:
-    0 0 0 1px rgba(212,165,116,0.4) inset,
-    0 0 40px rgba(255, 221, 102, 0.08),
-    0 12px 50px rgba(0,0,0,0.6);
-  overflow: hidden;
+  background: var(--rtd-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 26px 30px;
 }
 
-/* 은은한 럭셔리 파티클 배경 */
-.rtd-main::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(2px 2px at 15% 20%, rgba(255,221,102,0.5), transparent),
-    radial-gradient(1.5px 1.5px at 45% 45%, rgba(255,221,102,0.4), transparent),
-    radial-gradient(2px 2px at 75% 15%, rgba(228,182,137,0.5), transparent),
-    radial-gradient(1px 1px at 30% 75%, rgba(255,221,102,0.4), transparent),
-    radial-gradient(1.5px 1.5px at 85% 60%, rgba(228,182,137,0.5), transparent),
-    radial-gradient(1px 1px at 20% 90%, rgba(255,221,102,0.3), transparent),
-    radial-gradient(2px 2px at 65% 85%, rgba(228,182,137,0.4), transparent);
-  background-size: 500px 500px;
-  pointer-events: none;
-  opacity: 0.5;
-  animation: sparkle 20s linear infinite;
-}
-
-@keyframes sparkle {
-  0%   { opacity: 0.5; }
-  50%  { opacity: 0.7; }
-  100% { opacity: 0.5; }
-}
-
-/* 상단 그라데이션 라인 */
-.rtd-main::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: linear-gradient(90deg,
-    transparent,
-    var(--rtd-gold),
-    var(--rtd-rose-lt),
-    var(--rtd-gold),
-    transparent);
-  box-shadow: 0 0 15px var(--rtd-gold);
-}
-
-/* 서브 메뉴 */
+/* 서브 메뉴 (미니멀) */
 .rtd-submenu {
   display: flex;
   justify-content: center;
-  gap: 14px;
-  margin-bottom: 20px;
-  position: relative;
-  z-index: 2;
+  gap: 8px;
+  margin-bottom: 18px;
   flex-wrap: wrap;
 }
 
 .rtd-submenu-item {
-  padding: 10px 22px;
-  background: rgba(0,0,0,0.4);
-  border: 1px solid var(--rtd-rose);
-  border-radius: 8px;
-  color: var(--rtd-rose-lt);
-  font-size: 13px;
-  font-weight: 700;
+  padding: 8px 18px;
+  background: transparent;
+  border: 1px solid var(--rtd-border);
+  border-radius: 6px;
+  color: var(--text-secondary);
+  font-size: 12.5px;
+  font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.15s;
   font-family: inherit;
-  letter-spacing: 0.3px;
-  backdrop-filter: blur(4px);
 }
 
 .rtd-submenu-item:hover {
-  background: rgba(212,165,116,0.2);
-  color: #fff;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(212,165,116,0.3);
+  background: rgba(212,165,116,0.06);
+  color: var(--text-primary);
+  border-color: rgba(212,165,116,0.3);
 }
 
 .rtd-submenu-item.active {
-  background: linear-gradient(180deg, var(--rtd-gold-lt), var(--rtd-rose));
-  color: var(--rtd-plum-dk);
+  background: rgba(212,165,116,0.12);
+  color: var(--rtd-gold-lt);
   border-color: var(--rtd-gold);
-  box-shadow:
-    0 4px 15px rgba(255,221,102,0.4),
-    0 0 0 1px rgba(255,255,255,0.3) inset;
-  text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+  font-weight: 700;
 }
 
-/* 상단 공지 */
+/* 상단 공지 (미니멀) */
 .rtd-notice-top {
   text-align: center;
-  color: var(--rtd-gold);
-  font-size: 14px;
-  font-weight: 600;
-  line-height: 1.7;
-  margin-bottom: 22px;
-  padding: 0 20px;
-  position: relative;
-  z-index: 2;
-  text-shadow:
-    0 1px 6px rgba(0,0,0,0.6),
-    0 0 20px rgba(255,221,102,0.2);
-  letter-spacing: 0.3px;
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.6;
+  margin-bottom: 18px;
 }
 
-/* 타이틀 (럭셔리 그라데이션) */
+/* 타이틀 */
 .rtd-title {
   text-align: center;
-  font-size: 38px;
-  font-weight: 900;
-  margin: 0 0 24px;
-  letter-spacing: -1px;
-  position: relative;
-  z-index: 2;
-  background: linear-gradient(135deg, #fff 20%, var(--rtd-gold-lt) 50%, var(--rtd-rose) 80%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  text-shadow: 0 0 30px rgba(255,221,102,0.2);
-  filter: drop-shadow(0 4px 12px rgba(0,0,0,0.4));
-}
-
-/* 타이틀 밑에 골드 구분선 */
-.rtd-title::after {
-  content: '';
-  display: block;
-  width: 60px;
-  height: 2px;
-  margin: 12px auto 0;
-  background: linear-gradient(90deg, transparent, var(--rtd-gold), transparent);
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 20px;
+  letter-spacing: -0.5px;
 }
 
 /* 테이블 컨테이너 */
 .rtd-table-wrap {
   position: relative;
-  z-index: 2;
-  border: 2px solid var(--rtd-rose);
-  border-radius: 12px;
+  border: 1px solid var(--rtd-border);
+  border-radius: 8px;
   overflow: hidden;
-  box-shadow:
-    0 8px 30px rgba(0,0,0,0.5),
-    0 0 0 1px rgba(255,221,102,0.15) inset;
 }
 
 #selectionBox {
   position: absolute;
   border: 2px dashed var(--rtd-gold);
-  background: rgba(255, 221, 102, 0.2);
+  background: rgba(212, 165, 116, 0.12);
   pointer-events: none;
   z-index: 10;
   display: none;
-  border-radius: 6px;
-  box-shadow: 0 0 15px rgba(255,221,102,0.4);
+  border-radius: 4px;
 }
 
-/* 데이터 테이블 (럭셔리) */
+/* 테이블 (깔끔) */
 .rtd-table {
   width: 100%;
   border-collapse: collapse;
-  table-layout: auto;
-  font-size: 14px;
+  font-size: 13.5px;
   background: var(--rtd-row);
 }
 
 .rtd-table thead td {
-  background: linear-gradient(180deg, var(--rtd-header-lt), var(--rtd-header));
-  color: var(--rtd-gold-lt);
-  font-weight: 800;
-  padding: 16px 12px;
+  background: var(--rtd-header);
+  color: var(--text-primary);
+  font-weight: 700;
+  padding: 13px 10px;
   text-align: center;
-  border: 1px solid rgba(0,0,0,0.4);
-  font-size: 13px;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+  border: 1px solid var(--rtd-border);
+  font-size: 12.5px;
+  letter-spacing: 0.5px;
 }
 
 .rtd-table tbody td {
-  padding: 12px 10px;
+  padding: 11px 10px;
   text-align: center;
-  color: #e8e0d5;
-  border: 1px solid rgba(255,255,255,0.06);
+  color: var(--text-primary);
+  border: 1px solid var(--rtd-border);
   font-weight: 500;
   background: var(--rtd-row);
   word-break: break-word;
-  min-height: 36px;
-  transition: all 0.15s;
+  transition: background 0.1s;
 }
 
 .rtd-table tbody tr:nth-child(even) td {
@@ -232,7 +138,7 @@
 }
 
 .rtd-table tbody tr:hover td {
-  background: rgba(255, 221, 102, 0.04);
+  background: rgba(212, 165, 116, 0.04);
 }
 
 .rtd-table td[contenteditable="true"] {
@@ -241,17 +147,12 @@
 }
 
 .rtd-table td[contenteditable="true"]:focus {
-  box-shadow:
-    inset 0 0 0 2px var(--rtd-gold),
-    inset 0 0 12px rgba(255,221,102,0.15);
-  background: rgba(255,221,102,0.05);
+  box-shadow: inset 0 0 0 2px var(--rtd-gold);
 }
 
 .rtd-table td.selected {
-  box-shadow:
-    inset 0 0 0 2px var(--rtd-gold),
-    0 0 12px rgba(255,221,102,0.6) !important;
-  background: rgba(255, 221, 102, 0.08) !important;
+  box-shadow: inset 0 0 0 2px var(--rtd-gold) !important;
+  background: rgba(212, 165, 116, 0.1) !important;
   position: relative;
   z-index: 5;
 }
@@ -261,129 +162,104 @@
   -webkit-user-select: none !important;
 }
 
-/* 하단 공지 */
+/* 하단 공지 (미니멀) */
 .rtd-notice-bottom {
-  margin-top: 24px;
-  padding: 16px 22px;
-  background:
-    linear-gradient(90deg, rgba(0,0,0,0.5), rgba(0,0,0,0.3));
-  border-left: 3px solid var(--rtd-rose);
-  border-radius: 6px;
-  color: var(--rtd-rose-lt);
+  margin-top: 18px;
+  padding: 12px 16px;
+  background: rgba(0, 0, 0, 0.15);
+  border-left: 2px solid var(--rtd-rose);
+  border-radius: 4px;
+  color: var(--text-secondary);
   font-size: 12px;
-  line-height: 1.8;
-  position: relative;
-  z-index: 2;
-  backdrop-filter: blur(4px);
+  line-height: 1.6;
 }
 
-.rtd-notice-bottom b {
-  color: var(--rtd-gold);
-  text-shadow: 0 0 8px rgba(255,221,102,0.3);
-}
+.rtd-notice-bottom b { color: var(--rtd-gold-lt); }
 
-/* ─────────── 오른쪽 도구 패널 ─────────── */
+/* ─────────── 오른쪽 도구 패널 (미니멀) ─────────── */
 .rtd-tools {
-  background: linear-gradient(180deg, var(--bg-panel), var(--bg-card));
+  background: var(--bg-panel);
   border: 1px solid var(--border);
-  border-radius: 14px;
+  border-radius: 12px;
   overflow: hidden;
   align-self: start;
   position: sticky;
-  top: 20px;
+  top: 0;
   max-height: calc(100vh - var(--topbar-h) - 40px);
   display: flex;
   flex-direction: column;
-  box-shadow:
-    0 4px 20px rgba(0,0,0,0.4),
-    0 0 0 1px rgba(255,221,102,0.05) inset;
 }
 
-.rtd-tools.collapsed { width: 48px; }
+.rtd-tools.collapsed { width: 44px; }
 .rtd-tools.collapsed .rtd-tools-body,
 .rtd-tools.collapsed .rtd-tools-header span { display: none; }
 .rtd-tools.collapsed .rtd-tools-toggle { transform: rotate(180deg); }
 
 .rtd-tools-header {
-  padding: 14px 18px;
-  background: linear-gradient(180deg, var(--rtd-plum-lt), var(--rtd-plum));
-  border-bottom: 1px solid var(--rtd-rose);
-  color: var(--rtd-gold);
+  padding: 12px 16px;
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--border);
+  color: var(--text-primary);
   font-weight: 700;
-  font-size: 14px;
+  font-size: 13.5px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  letter-spacing: 0.5px;
-  position: relative;
-}
-
-.rtd-tools-header::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--rtd-gold), transparent);
+  letter-spacing: 0.3px;
 }
 
 .rtd-tools-toggle {
   background: none;
   border: none;
-  color: var(--rtd-rose-lt);
+  color: var(--text-secondary);
   cursor: pointer;
-  font-size: 14px;
+  font-size: 13px;
   padding: 4px 8px;
   border-radius: 4px;
-  transition: all 0.2s;
+  transition: all 0.15s;
 }
 
 .rtd-tools-toggle:hover {
-  background: rgba(212,165,116,0.15);
-  color: var(--rtd-gold);
+  background: var(--bg-hover);
+  color: var(--text-primary);
 }
 
-.rtd-tools-body { padding: 16px; overflow-y: auto; flex: 1; }
+.rtd-tools-body { padding: 14px; overflow-y: auto; flex: 1; }
 
-/* 사용법 안내 (럭셔리) */
+/* 사용법 안내 (미니멀) */
 .rtd-tools-hint {
-  background: linear-gradient(135deg, rgba(255,221,102,0.08), rgba(228,182,137,0.03));
-  border: 1px solid rgba(255,221,102,0.25);
-  border-radius: 8px;
-  padding: 12px 14px;
-  margin-bottom: 14px;
+  background: rgba(212,165,116,0.05);
+  border: 1px solid rgba(212,165,116,0.15);
+  border-radius: 6px;
+  padding: 10px 12px;
+  margin-bottom: 12px;
   font-size: 11px;
-  color: var(--rtd-gold-lt);
-  line-height: 1.7;
+  color: var(--text-secondary);
+  line-height: 1.6;
 }
 
 .rtd-tools-hint b {
   display: block;
-  margin-bottom: 6px;
-  color: var(--rtd-gold);
-  font-size: 12px;
-  letter-spacing: 0.5px;
+  margin-bottom: 5px;
+  color: var(--rtd-gold-lt);
+  font-size: 11.5px;
 }
 
-.rtd-tools-hint p {
-  margin: 4px 0;
-  color: #d5cfc5;
-}
+.rtd-tools-hint p { margin: 3px 0; }
 
 .rtd-tool-section {
-  padding: 12px 0;
-  border-bottom: 1px solid rgba(255,221,102,0.08);
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
 }
 
 .rtd-tool-section:last-child { border-bottom: none; }
 
 .rtd-tool-label {
-  font-size: 11px;
-  font-weight: 800;
-  color: var(--rtd-rose-lt);
-  letter-spacing: 1.2px;
-  margin-bottom: 10px;
+  font-size: 10.5px;
+  font-weight: 700;
+  color: var(--text-muted);
+  letter-spacing: 1px;
+  margin-bottom: 8px;
   text-transform: uppercase;
 }
 
@@ -391,16 +267,15 @@
   display: block;
   font-size: 11px;
   color: var(--text-secondary);
-  margin: 8px 0 4px;
-  letter-spacing: 0.3px;
+  margin: 6px 0 3px;
 }
 
 .rtd-tool-row { display: flex; gap: 6px; }
 
 .rtd-radio-row {
   display: flex;
-  gap: 14px;
-  margin-bottom: 10px;
+  gap: 12px;
+  margin-bottom: 8px;
   font-size: 12px;
 }
 
@@ -417,38 +292,37 @@
 }
 
 .rtd-input {
-  padding: 8px 12px;
-  background: rgba(0,0,0,0.3);
+  padding: 7px 10px;
+  background: var(--bg-body);
   border: 1px solid var(--border);
-  border-radius: 6px;
+  border-radius: 5px;
   color: var(--text-primary);
   font-size: 12px;
   outline: none;
   font-family: inherit;
   flex: 1;
   min-width: 0;
-  transition: all 0.15s;
+  transition: border-color 0.15s;
 }
 
 .rtd-input:focus {
   border-color: var(--rtd-gold);
-  box-shadow: 0 0 0 2px rgba(255,221,102,0.15);
 }
 
 .rtd-textarea {
   resize: vertical;
   width: 100%;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
   box-sizing: border-box;
   line-height: 1.5;
 }
 
 .rtd-btn {
-  padding: 8px 12px;
-  background: linear-gradient(180deg, #4a4055, #3a3045);
-  color: #fff;
-  border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 6px;
+  padding: 7px 12px;
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+  border-radius: 5px;
   font-size: 12px;
   font-weight: 600;
   cursor: pointer;
@@ -459,61 +333,59 @@
 }
 
 .rtd-btn:hover:not(:disabled) {
-  background: linear-gradient(180deg, #5a5065, #4a4055);
-  border-color: rgba(255,221,102,0.3);
-  transform: translateY(-1px);
+  background: var(--bg-card);
+  border-color: rgba(212,165,116,0.3);
 }
 
 .rtd-btn:disabled {
-  background: #2a2030;
-  color: #555;
+  background: transparent;
+  color: var(--text-muted);
   cursor: not-allowed;
   border-color: transparent;
 }
 
 .rtd-btn.primary {
-  background: linear-gradient(180deg, #5a7aaa, #3a5a8a);
-  border-color: rgba(100,150,200,0.4);
+  background: #3a5a8a;
+  border-color: transparent;
+  color: #fff;
 }
 
 .rtd-btn.primary:hover:not(:disabled) {
-  background: linear-gradient(180deg, #6a8aba, #4a6a9a);
+  background: #4a6a9a;
 }
 
 .rtd-btn-full { width: 100%; flex: none; }
 
 .rtd-btn-accent {
-  background: linear-gradient(180deg, var(--rtd-gold-lt), var(--rtd-rose));
-  color: var(--rtd-plum-dk);
+  background: var(--rtd-gold);
+  color: #1a1a1e;
   font-weight: 700;
   border-color: var(--rtd-gold);
-  text-shadow: 0 1px 2px rgba(255,255,255,0.2);
-  box-shadow: 0 2px 8px rgba(255,221,102,0.2);
 }
 
 .rtd-btn-accent:hover:not(:disabled) {
-  background: linear-gradient(180deg, #fff8dd, var(--rtd-rose-lt));
-  box-shadow: 0 4px 12px rgba(255,221,102,0.4);
+  background: var(--rtd-gold-lt);
+  border-color: var(--rtd-gold-lt);
 }
 
 .rtd-btn-danger {
-  background: linear-gradient(180deg, #b04040, #802020);
-  border-color: rgba(255,80,80,0.4);
+  background: #802020;
+  border-color: transparent;
   color: #fff;
 }
 
 .rtd-btn-danger:hover:not(:disabled) {
-  background: linear-gradient(180deg, #c05050, #903030);
+  background: #a03030;
 }
 
 .rtd-palette {
   display: grid;
   grid-template-columns: repeat(8, 1fr);
-  gap: 4px;
-  padding: 8px;
-  background: rgba(0,0,0,0.3);
+  gap: 3px;
+  padding: 6px;
+  background: var(--bg-body);
   border: 1px solid var(--border);
-  border-radius: 6px;
+  border-radius: 5px;
   min-height: 120px;
 }
 
@@ -522,16 +394,15 @@
   aspect-ratio: 1;
   min-height: 22px;
   border: 1px solid rgba(255,255,255,0.15);
-  border-radius: 4px;
+  border-radius: 3px;
   cursor: pointer;
-  transition: all 0.15s;
+  transition: transform 0.1s;
   display: block;
 }
 
 .rtd-swatch:hover {
-  transform: scale(1.2);
+  transform: scale(1.15);
   border-color: var(--rtd-gold);
-  box-shadow: 0 0 10px rgba(255,221,102,0.6);
   z-index: 2;
   position: relative;
 }
