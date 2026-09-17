@@ -1,6 +1,6 @@
 /**
  * BANADA 데이터 센터 - SPA 라우터
- * 
+ *
  * 페이지 fragment(HTML)을 fetch로 불러와서 #app-content에 삽입
  * URL 해시(#page=xxx)로 페이지 상태 관리 → 새로고침해도 유지
  */
@@ -68,7 +68,7 @@ function renderBreadcrumb(pageId) {
 // ─────────── 페이지 로드 ───────────
 async function loadPage(pageId) {
   if (!contentEl) return;
-  
+
   const found = findMenuByPage(pageId);
   if (!found) {
     pageId = DEFAULT_PAGE;
@@ -95,7 +95,12 @@ async function loadPage(pageId) {
 
     // 페이지별 초기화 스크립트가 있으면 실행
     try {
-      const mod = await import(`../pages/${pageId}.js`);
+      // ★ [수정] URL 기반 절대 경로 사용 - GitHub Pages 서브폴더 지원
+      // 로컬에서는 baseURI = http://localhost:5500/
+      // GitHub Pages에서는 baseURI = https://user.github.io/banada-cms/
+      // 두 환경 모두에서 정확한 경로 계산됨
+      const scriptUrl = new URL(`pages/${pageId}.js`, document.baseURI).href;
+      const mod = await import(scriptUrl);
       if (typeof mod.init === 'function') {
         mod.init(contentEl);
       }
