@@ -1,34 +1,26 @@
 <!-- ═══════════════════════════════════════════════
      실시간 오류 - BANADA 스타일 편집 대시보드
-     상단: 회원 상태 테이블 / 하단: 주문 오류 테이블
      ═══════════════════════════════════════════════ -->
 
 <div class="rtd-layout">
   <!-- ─────────── 왼쪽: 데이터 영역 ─────────── -->
   <div class="rtd-main">
 
-    <!-- 상단 서브 메뉴 -->
+    <!-- 상단 서브 메뉴 (traffic-live와 동일 구조) -->
     <div class="rtd-submenu" id="rtdSubmenu">
-      <button class="rtd-submenu-item active">BANADA 전국 오류 모니터링</button>
-      <button class="rtd-submenu-item">VIP 회원 결제 오류 관리</button>
-      <button class="rtd-submenu-item">BANADA 데이터 복구실</button>
+      <button class="rtd-submenu-item active">BANADA 전국 프레스티지 서비스</button>
+      <button class="rtd-submenu-item">VIP 회원 전용 통합 매니지먼트</button>
+      <button class="rtd-submenu-item">BANADA 회원 전용룸</button>
     </div>
 
     <!-- 상단 공지 문구 -->
-    <div class="rtd-notice-top" id="rtdNoticeTop">
-      데이터 정합성 확인 및 실시간 오류 처리 현황입니다.
-      아래 지침에 따라 신속·정확하게 대응해주십시오.
-    </div>
+    <div class="rtd-notice-top" id="rtdNoticeTop">당신의 취향을 공유하며, 뜨거운 교감을 나눌 은밀한 파트너. 은밀한 만남을 통해 최상의 만족감을 경험하세요.</div>
 
     <!-- 타이틀 -->
     <h1 class="rtd-title">실시간 오류 현황</h1>
 
     <!-- 위험 경고 배너 -->
-    <div class="rtd-danger-notice" id="rtdDangerNotice" contenteditable="true">
-      <span class="rtd-danger-mark">⚠ DAMAGE!</span>
-      주의사항 4단계에서 일치 파트너십으로 통합된 유형만을 선택하여 공유 임무를 완료하며,
-      함께 할 때의 금일 결제 금액 후 공동 이익을 마감해야 합니다.
-    </div>
+    <div class="rtd-danger-notice" id="rtdDangerNotice" contenteditable="true"><span class="rtd-danger-mark">⚠ DAMAGE!</span>주의사항 4단계에서 일치 파트너십으로 통합된 유형만을 선택하여 공유 임무를 완료하며, 함께 할 때의 금일 결제 금액 후 공동 이익을 마감해야 합니다.</div>
 
     <!-- ═════ 상단 테이블: 회원 상태 ═════ -->
     <div class="rtd-table-wrap">
@@ -76,7 +68,7 @@
       </table>
     </div>
 
-    <!-- 중간 안내 공지 (편집 가능) -->
+    <!-- 중간 안내 (편집 가능) -->
     <div class="rtd-middle-notice" id="rtdMiddleNotice" contenteditable="true">1. 위 공동구매 회원들이 클리어 데이터를 지시에 따라 진행하지 못하여 실패로 인해 회원가입 및 계정 비활성화되어 출금불가.
 2. 상호협력의 발전목적을 실천하기 위해 공식적으로 1~2회 연속 클리어수정을 특별히 승인하였으며, 수정주문은 만장일치로 합의되어야 합니다.
 3. 수정주문은 계좌와 계좌 이상 데이터 복구 후 출금 코드를 매니저 갱신을 완료해야 출금가능하며, 데이터 완료 이전에는 현금 출금이 불가능합니다.
@@ -129,13 +121,10 @@
     </div>
 
     <!-- 하단 공지 -->
-    <div class="rtd-notice-bottom" id="rtdNoticeBottom">
-      <b>[중요 공지]</b> 오류 로그는 실시간 반영되며, 처리 결과는 담당자 승인 후 확정됩니다.<br>
-      개별 처리로 발생하는 모든 결과 책임은 담당자에게 귀속되오니, 항상 확인하여 주십시오.
-    </div>
+    <div class="rtd-notice-bottom" id="rtdNoticeBottom"><b>[중요 공지]</b> 오류 로그는 실시간 반영되며, 처리 결과는 담당자 승인 후 확정됩니다.<br>개별 처리로 발생하는 모든 결과 책임은 담당자에게 귀속되오니, 항상 확인하여 주십시오.</div>
   </div>
 
-  <!-- ─────────── 오른쪽: 도구 패널 (traffic-live와 동일) ─────────── -->
+  <!-- ─────────── 오른쪽: 도구 패널 ─────────── -->
   <aside class="rtd-tools" id="rtdTools">
     <div class="rtd-tools-header">
       <span>🛠️ 편집 도구</span>
@@ -143,12 +132,14 @@
     </div>
 
     <div class="rtd-tools-body">
+      <!-- 사용법 -->
       <div class="rtd-tools-hint">
         <b>💡 사용법</b>
         <p>1. 셀 <b>클릭</b> → 바로 편집</p>
         <p>2. <span style="color:#29b6f6;">Ctrl/Cmd + 드래그</span> → 여러 셀 선택 후 스타일 적용</p>
       </div>
 
+      <!-- Undo/Redo -->
       <div class="rtd-tool-section">
         <div class="rtd-tool-row">
           <button class="rtd-btn primary" id="rtdUndoBtn" disabled title="Ctrl+Z">↶ 되돌리기</button>
@@ -156,15 +147,17 @@
         </div>
       </div>
 
+      <!-- 색상 -->
       <div class="rtd-tool-section">
-        <div class="rtd-tool-label">🎨 색상 적용</div>
+        <div class="rtd-tool-label">🎨 색상 팔레트 선택 (40색)</div>
         <div class="rtd-radio-row">
-          <label><input type="radio" name="rtdColorTarget" value="text" checked> 글자색</label>
-          <label><input type="radio" name="rtdColorTarget" value="background"> 배경색</label>
+          <label><input type="radio" name="rtdColorTarget" value="text" checked> 글자색 적용</label>
+          <label><input type="radio" name="rtdColorTarget" value="background"> 배경색 적용</label>
         </div>
         <div class="rtd-palette" id="rtdPalette"></div>
       </div>
 
+      <!-- 폰트 크기 -->
       <div class="rtd-tool-section">
         <div class="rtd-tool-label">📏 글꼴 크기</div>
         <div class="rtd-tool-row">
@@ -173,6 +166,7 @@
         </div>
       </div>
 
+      <!-- 문구 편집 -->
       <div class="rtd-tool-section">
         <div class="rtd-tool-label">✏️ 문구 편집</div>
         <label class="rtd-mini-label">상단 문구</label>
@@ -186,6 +180,7 @@
         <button class="rtd-btn rtd-btn-full rtd-btn-accent" id="rtdApplyText">문구 적용</button>
       </div>
 
+      <!-- 행/열 -->
       <div class="rtd-tool-section">
         <div class="rtd-tool-label">📊 행 · 열</div>
         <div class="rtd-tool-row">
@@ -196,14 +191,12 @@
           <button class="rtd-btn rtd-btn-danger" id="rtdDelRow">− 행 삭제</button>
           <button class="rtd-btn rtd-btn-danger" id="rtdDelCol">− 열 삭제</button>
         </div>
-        <div style="font-size: 10px; color: var(--text-muted); margin-top: 6px;">
-          ※ 셀 선택된 테이블에 적용됩니다
-        </div>
         <button class="rtd-btn rtd-btn-full" id="rtdAutoFit" style="margin-top: 6px; background: #29b6f6; color: #fff;">
           🔄 열 너비 자동 맞춤
         </button>
       </div>
 
+      <!-- 클립보드 -->
       <div class="rtd-tool-section">
         <div class="rtd-tool-label">📋 클립보드</div>
         <div class="rtd-tool-row">
@@ -212,6 +205,7 @@
         </div>
       </div>
 
+      <!-- 저장 -->
       <div class="rtd-tool-section">
         <div class="rtd-tool-label">
           💾 저장 <span id="rtdSaveStatus"></span>
@@ -225,6 +219,7 @@
         </button>
       </div>
 
+      <!-- 다운로드 -->
       <div class="rtd-tool-section">
         <div class="rtd-tool-label">📸 이미지 저장</div>
         <button class="rtd-btn rtd-btn-full rtd-btn-accent" id="rtdDlSelection">
