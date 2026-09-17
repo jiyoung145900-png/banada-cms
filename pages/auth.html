@@ -1,16 +1,1127 @@
-<div class="page-header">
-  <div>
-    <h1 class="page-title">🔐 인증 상태</h1>
-    <p class="page-subtitle">본인 인증 승인 및 관리</p>
+<!-- ═══════════════════════════════════════════════
+     인증 상태 - BANADA CMS
+     회원 아이디로 검색 후 세밀한 인증 관리
+     ═══════════════════════════════════════════════ -->
+
+<div id="authPage">
+
+  <!-- 헤더 -->
+  <div class="page-header">
+    <div>
+      <div style="font-size: 11px; color: var(--accent-rose); letter-spacing: 2px; font-weight: 700; margin-bottom: 4px;">MEMBER AUTHENTICATION</div>
+      <h1 class="page-title">인증 상태 관리</h1>
+      <p class="page-subtitle">회원 아이디로 검색하여 인증 항목을 세밀하게 관리합니다</p>
+    </div>
+    <div style="text-align: right;">
+      <div style="font-size: 10px; color: var(--text-muted); letter-spacing: 1.5px;">TODAY PROCESSED</div>
+      <div style="font-size: 18px; color: var(--accent-gold); font-weight: 700; margin-top: 2px;">
+        승인 <b>24</b> · 거부 <b>3</b>
+      </div>
+    </div>
+  </div>
+
+  <!-- 검색바 -->
+  <div class="auth-search-bar">
+    <div class="auth-search-icon">🔍</div>
+    <input
+      type="text"
+      class="auth-search-input"
+      id="authSearchInput"
+      placeholder="회원 아이디 · 전화번호 · 이메일로 검색"
+      autocomplete="off">
+    <button class="auth-search-btn" id="authSearchBtn">검색</button>
+  </div>
+
+  <!-- 최근 검색 (칩) -->
+  <div class="auth-recent">
+    <span class="auth-recent-label">최근 검색:</span>
+    <button class="auth-chip" data-uid="jinho_88">jinho_88</button>
+    <button class="auth-chip" data-uid="miyoung_09">miyoung_09</button>
+    <button class="auth-chip" data-uid="sunny_star">sunny_star</button>
+    <button class="auth-chip" data-uid="dahye_love">dahye_love</button>
+    <button class="auth-chip auth-chip-clear">전체 삭제 ✕</button>
+  </div>
+
+  <!-- ══════════ 검색 결과 없을 때 (초기 상태) ══════════ -->
+  <div class="auth-empty" id="authEmpty">
+    <div class="auth-empty-icon">👤</div>
+    <div class="auth-empty-title">회원을 검색해주세요</div>
+    <div class="auth-empty-desc">아이디, 전화번호 또는 이메일로 회원을 찾을 수 있습니다.</div>
+  </div>
+
+  <!-- ══════════ 검색 결과 (기본 숨김, JS로 표시) ══════════ -->
+  <div class="auth-result" id="authResult" style="display: none;">
+
+    <!-- 회원 정보 카드 -->
+    <div class="auth-user-card">
+      <div class="auth-user-left">
+        <div class="auth-user-avatar" style="background: rgba(212,165,116,0.15); color: var(--accent-gold);" id="userAvatar">J</div>
+        <div>
+          <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+            <div class="auth-user-name" id="userName">jinho_88</div>
+            <span class="auth-badge tier-vip" id="userTier">VIP</span>
+            <span class="auth-badge status-active" id="userStatus">● 정상</span>
+          </div>
+          <div class="auth-user-meta">
+            <div class="auth-meta-item">
+              <span class="auth-meta-label">실명</span>
+              <span class="auth-meta-value" id="userRealName">진호</span>
+            </div>
+            <div class="auth-meta-item">
+              <span class="auth-meta-label">전화</span>
+              <span class="auth-meta-value" id="userPhone">010-1234-5678</span>
+            </div>
+            <div class="auth-meta-item">
+              <span class="auth-meta-label">이메일</span>
+              <span class="auth-meta-value" id="userEmail">jinho88@example.com</span>
+            </div>
+            <div class="auth-meta-item">
+              <span class="auth-meta-label">가입일</span>
+              <span class="auth-meta-value" id="userJoined">2024-08-15</span>
+            </div>
+            <div class="auth-meta-item">
+              <span class="auth-meta-label">최근 접속</span>
+              <span class="auth-meta-value" id="userLastLogin">방금 전</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="auth-user-actions">
+        <button class="auth-btn auth-btn-secondary" title="이 회원에게 메모">📝 메모</button>
+        <button class="auth-btn auth-btn-secondary" title="이 회원 정지">⚠ 정지</button>
+        <button class="auth-btn auth-btn-danger" title="회원 탈퇴">🗑 탈퇴</button>
+      </div>
+    </div>
+
+    <!-- 인증 요약 -->
+    <div class="auth-summary">
+      <div class="auth-summary-item">
+        <div class="auth-summary-num" style="color: var(--accent-green);">6</div>
+        <div class="auth-summary-label">승인 완료</div>
+      </div>
+      <div class="auth-summary-item">
+        <div class="auth-summary-num" style="color: var(--accent-warn);">2</div>
+        <div class="auth-summary-label">대기 중</div>
+      </div>
+      <div class="auth-summary-item">
+        <div class="auth-summary-num" style="color: var(--accent-red);">1</div>
+        <div class="auth-summary-label">거부</div>
+      </div>
+      <div class="auth-summary-item">
+        <div class="auth-summary-num" style="color: var(--text-muted);">0</div>
+        <div class="auth-summary-label">미인증</div>
+      </div>
+    </div>
+
+    <!-- 인증 항목 리스트 (세밀 관리) -->
+    <div class="auth-items-header">
+      <div style="font-size: 12px; color: var(--text-muted); letter-spacing: 1.5px; font-weight: 700; text-transform: uppercase;">
+        <span style="color: var(--accent-gold); margin-right: 6px;">◆</span>인증 항목별 관리
+      </div>
+      <div class="auth-items-filter">
+        <button class="auth-filter-btn active" data-filter="all">전체 9</button>
+        <button class="auth-filter-btn" data-filter="pending">대기 2</button>
+        <button class="auth-filter-btn" data-filter="approved">승인 6</button>
+        <button class="auth-filter-btn" data-filter="rejected">거부 1</button>
+      </div>
+    </div>
+
+    <div class="auth-items" id="authItems">
+
+      <!-- 본인 인증 (KYC) -->
+      <div class="auth-item" data-status="approved">
+        <div class="auth-item-icon" style="background: rgba(76,175,80,0.1); color: var(--accent-green);">✓</div>
+        <div class="auth-item-info">
+          <div class="auth-item-name">본인 인증 (KYC)</div>
+          <div class="auth-item-meta">
+            <span>승인일: <b>2024-08-15</b></span>
+            <span>·</span>
+            <span>승인자: <b>관리자</b></span>
+            <span>·</span>
+            <span class="auth-doc-link">📎 신분증 사본 보기</span>
+          </div>
+        </div>
+        <div class="auth-item-status">
+          <select class="auth-status-select status-approved">
+            <option value="approved" selected>✓ 승인</option>
+            <option value="pending">⏱ 대기</option>
+            <option value="rejected">✕ 거부</option>
+            <option value="none">- 미인증</option>
+          </select>
+        </div>
+        <div class="auth-item-actions">
+          <button class="auth-mini-btn" title="상세 보기">⋯</button>
+        </div>
+      </div>
+
+      <!-- 성인 인증 -->
+      <div class="auth-item" data-status="approved">
+        <div class="auth-item-icon" style="background: rgba(76,175,80,0.1); color: var(--accent-green);">✓</div>
+        <div class="auth-item-info">
+          <div class="auth-item-name">성인 인증</div>
+          <div class="auth-item-meta">
+            <span>승인일: <b>2024-08-15</b></span>
+            <span>·</span>
+            <span>본인인증 자동 승인</span>
+          </div>
+        </div>
+        <div class="auth-item-status">
+          <select class="auth-status-select status-approved">
+            <option value="approved" selected>✓ 승인</option>
+            <option value="pending">⏱ 대기</option>
+            <option value="rejected">✕ 거부</option>
+            <option value="none">- 미인증</option>
+          </select>
+        </div>
+        <div class="auth-item-actions">
+          <button class="auth-mini-btn" title="상세 보기">⋯</button>
+        </div>
+      </div>
+
+      <!-- 신분증 인증 -->
+      <div class="auth-item" data-status="approved">
+        <div class="auth-item-icon" style="background: rgba(76,175,80,0.1); color: var(--accent-green);">✓</div>
+        <div class="auth-item-info">
+          <div class="auth-item-name">신분증 인증</div>
+          <div class="auth-item-meta">
+            <span>승인일: <b>2024-08-15</b></span>
+            <span>·</span>
+            <span class="auth-doc-link">📎 주민등록증 앞면</span>
+            <span>·</span>
+            <span class="auth-doc-link">📎 뒷면</span>
+          </div>
+        </div>
+        <div class="auth-item-status">
+          <select class="auth-status-select status-approved">
+            <option value="approved" selected>✓ 승인</option>
+            <option value="pending">⏱ 대기</option>
+            <option value="rejected">✕ 거부</option>
+            <option value="none">- 미인증</option>
+          </select>
+        </div>
+        <div class="auth-item-actions">
+          <button class="auth-mini-btn" title="상세 보기">⋯</button>
+        </div>
+      </div>
+
+      <!-- 계좌 인증 -->
+      <div class="auth-item" data-status="pending">
+        <div class="auth-item-icon" style="background: rgba(255,152,0,0.1); color: var(--accent-warn);">⏱</div>
+        <div class="auth-item-info">
+          <div class="auth-item-name">계좌 인증</div>
+          <div class="auth-item-meta">
+            <span>신청일: <b>2026-09-17 14:32</b></span>
+            <span>·</span>
+            <span class="auth-doc-link">📎 통장 사본</span>
+            <span>·</span>
+            <span style="color: var(--accent-warn);">⚠ 은행: 국민은행</span>
+          </div>
+        </div>
+        <div class="auth-item-status">
+          <select class="auth-status-select status-pending">
+            <option value="approved">✓ 승인</option>
+            <option value="pending" selected>⏱ 대기</option>
+            <option value="rejected">✕ 거부</option>
+            <option value="none">- 미인증</option>
+          </select>
+        </div>
+        <div class="auth-item-actions">
+          <button class="auth-mini-btn auth-mini-approve" title="빠른 승인">✓</button>
+          <button class="auth-mini-btn auth-mini-reject" title="빠른 거부">✕</button>
+          <button class="auth-mini-btn" title="상세 보기">⋯</button>
+        </div>
+      </div>
+
+      <!-- 전화번호 인증 -->
+      <div class="auth-item" data-status="approved">
+        <div class="auth-item-icon" style="background: rgba(76,175,80,0.1); color: var(--accent-green);">✓</div>
+        <div class="auth-item-info">
+          <div class="auth-item-name">전화번호 인증</div>
+          <div class="auth-item-meta">
+            <span>인증번호: <b>SMS 통과</b></span>
+            <span>·</span>
+            <span>승인일: <b>2024-08-15</b></span>
+          </div>
+        </div>
+        <div class="auth-item-status">
+          <select class="auth-status-select status-approved">
+            <option value="approved" selected>✓ 승인</option>
+            <option value="pending">⏱ 대기</option>
+            <option value="rejected">✕ 거부</option>
+            <option value="none">- 미인증</option>
+          </select>
+        </div>
+        <div class="auth-item-actions">
+          <button class="auth-mini-btn" title="상세 보기">⋯</button>
+        </div>
+      </div>
+
+      <!-- 이메일 인증 -->
+      <div class="auth-item" data-status="approved">
+        <div class="auth-item-icon" style="background: rgba(76,175,80,0.1); color: var(--accent-green);">✓</div>
+        <div class="auth-item-info">
+          <div class="auth-item-name">이메일 인증</div>
+          <div class="auth-item-meta">
+            <span>이메일: <b>jinho88@example.com</b></span>
+            <span>·</span>
+            <span>승인일: <b>2024-08-15</b></span>
+          </div>
+        </div>
+        <div class="auth-item-status">
+          <select class="auth-status-select status-approved">
+            <option value="approved" selected>✓ 승인</option>
+            <option value="pending">⏱ 대기</option>
+            <option value="rejected">✕ 거부</option>
+            <option value="none">- 미인증</option>
+          </select>
+        </div>
+        <div class="auth-item-actions">
+          <button class="auth-mini-btn" title="상세 보기">⋯</button>
+        </div>
+      </div>
+
+      <!-- VIP 인증 -->
+      <div class="auth-item" data-status="approved">
+        <div class="auth-item-icon" style="background: rgba(212,165,116,0.15); color: var(--accent-gold);">★</div>
+        <div class="auth-item-info">
+          <div class="auth-item-name">VIP 등급 인증 <span class="auth-item-badge" style="background: rgba(212,165,116,0.15); color: var(--accent-gold-lt);">PREMIUM</span></div>
+          <div class="auth-item-meta">
+            <span>승격일: <b>2025-03-10</b></span>
+            <span>·</span>
+            <span>승격 사유: 프리미엄 결제 5회 이상</span>
+            <span>·</span>
+            <span>승격자: <b>관리자</b></span>
+          </div>
+        </div>
+        <div class="auth-item-status">
+          <select class="auth-status-select status-approved">
+            <option value="approved" selected>✓ 승인</option>
+            <option value="pending">⏱ 대기</option>
+            <option value="rejected">✕ 거부</option>
+            <option value="none">- 미인증</option>
+          </select>
+        </div>
+        <div class="auth-item-actions">
+          <button class="auth-mini-btn" title="상세 보기">⋯</button>
+        </div>
+      </div>
+
+      <!-- 지역 인증 -->
+      <div class="auth-item" data-status="pending">
+        <div class="auth-item-icon" style="background: rgba(255,152,0,0.1); color: var(--accent-warn);">⏱</div>
+        <div class="auth-item-info">
+          <div class="auth-item-name">지역 인증 <span class="auth-item-badge" style="background: rgba(255,152,0,0.12); color: var(--accent-warn);">NEW</span></div>
+          <div class="auth-item-meta">
+            <span>신청 지역: <b>서울 강남구</b></span>
+            <span>·</span>
+            <span class="auth-doc-link">📎 재직증명서</span>
+            <span>·</span>
+            <span>신청일: <b>어제</b></span>
+          </div>
+        </div>
+        <div class="auth-item-status">
+          <select class="auth-status-select status-pending">
+            <option value="approved">✓ 승인</option>
+            <option value="pending" selected>⏱ 대기</option>
+            <option value="rejected">✕ 거부</option>
+            <option value="none">- 미인증</option>
+          </select>
+        </div>
+        <div class="auth-item-actions">
+          <button class="auth-mini-btn auth-mini-approve" title="빠른 승인">✓</button>
+          <button class="auth-mini-btn auth-mini-reject" title="빠른 거부">✕</button>
+          <button class="auth-mini-btn" title="상세 보기">⋯</button>
+        </div>
+      </div>
+
+      <!-- 사업자 인증 (거부됨 예시) -->
+      <div class="auth-item" data-status="rejected">
+        <div class="auth-item-icon" style="background: rgba(232,85,85,0.1); color: var(--accent-red);">✕</div>
+        <div class="auth-item-info">
+          <div class="auth-item-name">사업자 인증</div>
+          <div class="auth-item-meta">
+            <span>거부일: <b>2025-01-10</b></span>
+            <span>·</span>
+            <span style="color: var(--accent-red);">사유: 사업자등록증 이미지 불량</span>
+            <span>·</span>
+            <span class="auth-doc-link">📎 첨부 서류</span>
+          </div>
+        </div>
+        <div class="auth-item-status">
+          <select class="auth-status-select status-rejected">
+            <option value="approved">✓ 승인</option>
+            <option value="pending">⏱ 대기</option>
+            <option value="rejected" selected>✕ 거부</option>
+            <option value="none">- 미인증</option>
+          </select>
+        </div>
+        <div class="auth-item-actions">
+          <button class="auth-mini-btn" title="재검토 요청">↻</button>
+          <button class="auth-mini-btn" title="상세 보기">⋯</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 관리자 메모 -->
+    <div class="auth-memo-card">
+      <div class="auth-memo-header">
+        <span style="color: var(--accent-gold); margin-right: 6px;">📝</span>
+        관리자 메모
+        <span class="auth-memo-info">이 회원에 대한 내부 메모 · 회원에게 노출되지 않음</span>
+      </div>
+      <textarea
+        class="auth-memo-textarea"
+        id="authMemo"
+        placeholder="이 회원에 대한 특이사항, 주의사항 등을 기록하세요..."
+        rows="3">2025-03-10 프리미엄 등급으로 승격. VVIP 응대 요망.
+2025-01-10 사업자 인증 서류 재요청 안내 완료.</textarea>
+      <div class="auth-memo-footer">
+        <span class="auth-memo-updated">최종 수정: 2025-03-10 · 관리자</span>
+        <button class="auth-btn auth-btn-primary" id="btnSaveMemo">💾 메모 저장</button>
+      </div>
+    </div>
+
+    <!-- 처리 히스토리 -->
+    <div class="auth-history-card">
+      <div class="auth-history-header">
+        <span style="color: var(--accent-gold); margin-right: 6px;">◈</span>
+        처리 히스토리
+        <span class="auth-history-count">최근 5건</span>
+      </div>
+      <div class="auth-history-list">
+        <div class="auth-history-item">
+          <div class="auth-history-time">방금 전</div>
+          <div class="auth-history-tag tag-warn">계좌 인증 신청</div>
+          <div class="auth-history-text">회원이 계좌 인증을 신청했습니다.</div>
+        </div>
+        <div class="auth-history-item">
+          <div class="auth-history-time">어제</div>
+          <div class="auth-history-tag tag-warn">지역 인증 신청</div>
+          <div class="auth-history-text">서울 강남구 지역 인증 신청</div>
+        </div>
+        <div class="auth-history-item">
+          <div class="auth-history-time">2025-03-10</div>
+          <div class="auth-history-tag tag-gold">VIP 승격</div>
+          <div class="auth-history-text">관리자가 VIP 등급으로 승격 처리</div>
+        </div>
+        <div class="auth-history-item">
+          <div class="auth-history-time">2025-01-10</div>
+          <div class="auth-history-tag tag-red">사업자 인증 거부</div>
+          <div class="auth-history-text">관리자가 사업자 인증을 거부 (서류 불량)</div>
+        </div>
+        <div class="auth-history-item">
+          <div class="auth-history-time">2024-08-15</div>
+          <div class="auth-history-tag tag-green">가입 완료</div>
+          <div class="auth-history-text">회원 가입 및 기본 인증 완료</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 하단 저장 바 (일괄 처리) -->
+    <div class="auth-bottom-bar">
+      <div class="auth-bottom-info">
+        <span style="color: var(--accent-warn);">●</span>
+        변경 사항 <b>0</b>개
+      </div>
+      <div class="auth-bottom-actions">
+        <button class="auth-btn auth-btn-secondary" id="btnCancel">초기화</button>
+        <button class="auth-btn auth-btn-primary" id="btnSaveAll">💾 모든 변경사항 저장</button>
+      </div>
+    </div>
+
   </div>
 </div>
 
-<div class="card">
-  <div class="empty-state">
-    <div class="icon">🚧</div>
-    <div class="text">이 페이지는 준비 중입니다.</div>
-    <div style="margin-top: 12px; color: var(--text-muted); font-size: 12px;">
-      pages/auth.html 파일에서 콘텐츠를 편집하세요.
-    </div>
-  </div>
-</div>
+<style>
+  /* 검색바 (크게 강조) */
+  .auth-search-bar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 8px 8px 20px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-strong);
+    border-radius: 10px;
+    margin-bottom: 12px;
+    transition: all 0.15s;
+  }
+  .auth-search-bar:focus-within {
+    border-color: var(--accent-gold);
+    box-shadow: 0 0 0 3px rgba(212,165,116,0.1);
+  }
+  .auth-search-icon {
+    font-size: 18px;
+    color: var(--accent-gold);
+  }
+  .auth-search-input {
+    flex: 1;
+    padding: 12px 0;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--text-primary);
+    font-size: 15px;
+    font-family: inherit;
+  }
+  .auth-search-input::placeholder {
+    color: var(--text-muted);
+  }
+  .auth-search-btn {
+    padding: 10px 24px;
+    background: var(--accent-gold);
+    color: #1a1a1e;
+    border: none;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.15s;
+  }
+  .auth-search-btn:hover {
+    background: var(--accent-gold-lt);
+  }
+
+  /* 최근 검색 */
+  .auth-recent {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
+  .auth-recent-label {
+    font-size: 11px;
+    color: var(--text-muted);
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+  .auth-chip {
+    padding: 5px 12px;
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    color: var(--text-secondary);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.15s;
+  }
+  .auth-chip:hover {
+    background: rgba(212,165,116,0.1);
+    color: var(--accent-gold-lt);
+    border-color: rgba(212,165,116,0.3);
+  }
+  .auth-chip-clear {
+    color: var(--text-muted);
+    font-size: 11px;
+    margin-left: auto;
+  }
+
+  /* 빈 상태 */
+  .auth-empty {
+    text-align: center;
+    padding: 60px 20px;
+    background: var(--bg-panel);
+    border: 1px dashed var(--border);
+    border-radius: 12px;
+  }
+  .auth-empty-icon {
+    font-size: 48px;
+    opacity: 0.4;
+    margin-bottom: 12px;
+  }
+  .auth-empty-title {
+    font-size: 15px;
+    color: var(--text-primary);
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+  .auth-empty-desc {
+    font-size: 12.5px;
+    color: var(--text-muted);
+  }
+
+  /* 회원 카드 */
+  .auth-user-card {
+    padding: 22px 24px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent-gold);
+    border-radius: 12px;
+    margin-bottom: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+  }
+  .auth-user-left {
+    display: flex;
+    gap: 18px;
+    flex: 1;
+  }
+  .auth-user-avatar {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    font-weight: 800;
+    flex-shrink: 0;
+    border: 2px solid rgba(212,165,116,0.3);
+  }
+  .auth-user-name {
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--text-primary);
+    letter-spacing: -0.3px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .auth-badge {
+    font-size: 10.5px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+  }
+  .tier-vip {
+    background: rgba(212,165,116,0.15);
+    color: var(--accent-gold-lt);
+  }
+  .status-active {
+    background: rgba(76,175,80,0.15);
+    color: var(--accent-green);
+  }
+  .auth-user-meta {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 10px 24px;
+  }
+  .auth-meta-item {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    font-size: 12.5px;
+  }
+  .auth-meta-label {
+    color: var(--text-muted);
+    font-size: 11px;
+    font-weight: 600;
+    min-width: 55px;
+  }
+  .auth-meta-value {
+    color: var(--text-primary);
+    font-weight: 500;
+  }
+  .auth-user-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  /* 인증 요약 */
+  .auth-summary {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  .auth-summary-item {
+    padding: 16px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    text-align: center;
+  }
+  .auth-summary-num {
+    font-size: 30px;
+    font-weight: 800;
+    line-height: 1;
+    margin-bottom: 6px;
+    letter-spacing: -1px;
+  }
+  .auth-summary-label {
+    font-size: 11px;
+    color: var(--text-muted);
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+
+  /* 인증 항목 헤더 */
+  .auth-items-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+  .auth-items-filter {
+    display: flex;
+    gap: 4px;
+    background: var(--bg-panel);
+    padding: 3px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+  }
+  .auth-filter-btn {
+    padding: 5px 12px;
+    background: transparent;
+    border: none;
+    border-radius: 4px;
+    color: var(--text-secondary);
+    font-size: 11.5px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.15s;
+  }
+  .auth-filter-btn:hover {
+    color: var(--text-primary);
+    background: var(--bg-hover);
+  }
+  .auth-filter-btn.active {
+    background: rgba(212,165,116,0.15);
+    color: var(--accent-gold-lt);
+  }
+
+  /* 인증 항목 리스트 */
+  .auth-items {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+  .auth-item {
+    display: grid;
+    grid-template-columns: 44px 1fr 140px auto;
+    gap: 16px;
+    padding: 14px 18px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    align-items: center;
+    transition: all 0.15s;
+  }
+  .auth-item:hover {
+    border-color: rgba(212,165,116,0.25);
+    background: var(--bg-elevated);
+  }
+  .auth-item[data-status="pending"] {
+    border-left: 3px solid var(--accent-warn);
+  }
+  .auth-item[data-status="rejected"] {
+    border-left: 3px solid var(--accent-red);
+  }
+  .auth-item[data-status="approved"] {
+    border-left: 3px solid var(--accent-green);
+  }
+  .auth-item-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: 700;
+  }
+  .auth-item-name {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .auth-item-badge {
+    font-size: 9.5px;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+  }
+  .auth-item-meta {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    font-size: 11.5px;
+    color: var(--text-muted);
+    align-items: center;
+  }
+  .auth-item-meta b {
+    color: var(--text-secondary);
+    font-weight: 600;
+  }
+  .auth-doc-link {
+    color: var(--accent-blue);
+    cursor: pointer;
+    text-decoration: none;
+  }
+  .auth-doc-link:hover {
+    text-decoration: underline;
+  }
+
+  /* 상태 셀렉트 */
+  .auth-status-select {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text-primary);
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+    outline: none;
+    transition: all 0.15s;
+  }
+  .auth-status-select.status-approved {
+    background: rgba(76,175,80,0.1);
+    color: var(--accent-green);
+    border-color: rgba(76,175,80,0.3);
+  }
+  .auth-status-select.status-pending {
+    background: rgba(255,152,0,0.1);
+    color: var(--accent-warn);
+    border-color: rgba(255,152,0,0.3);
+  }
+  .auth-status-select.status-rejected {
+    background: rgba(232,85,85,0.1);
+    color: var(--accent-red);
+    border-color: rgba(232,85,85,0.3);
+  }
+  .auth-status-select:focus {
+    border-color: var(--accent-gold);
+    box-shadow: 0 0 0 2px rgba(212,165,116,0.15);
+  }
+
+  /* 미니 액션 버튼 */
+  .auth-item-actions {
+    display: flex;
+    gap: 4px;
+  }
+  .auth-mini-btn {
+    width: 30px;
+    height: 30px;
+    background: var(--bg-body);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    color: var(--text-secondary);
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+  }
+  .auth-mini-btn:hover {
+    transform: translateY(-1px);
+    border-color: rgba(212,165,116,0.3);
+  }
+  .auth-mini-approve:hover {
+    background: var(--accent-green);
+    color: #fff;
+    border-color: var(--accent-green);
+  }
+  .auth-mini-reject:hover {
+    background: var(--accent-red);
+    color: #fff;
+    border-color: var(--accent-red);
+  }
+
+  /* 메모 카드 */
+  .auth-memo-card, .auth-history-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px 22px;
+    margin-bottom: 16px;
+  }
+  .auth-memo-header, .auth-history-header {
+    display: flex;
+    align-items: center;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 12px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+    gap: 6px;
+  }
+  .auth-memo-info, .auth-history-count {
+    margin-left: auto;
+    font-size: 11px;
+    color: var(--text-muted);
+    font-weight: 500;
+    letter-spacing: 0.3px;
+  }
+  .auth-memo-textarea {
+    width: 100%;
+    padding: 12px 14px;
+    background: var(--bg-body);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text-primary);
+    font-size: 13px;
+    font-family: inherit;
+    line-height: 1.6;
+    outline: none;
+    resize: vertical;
+    box-sizing: border-box;
+    transition: border-color 0.15s;
+  }
+  .auth-memo-textarea:focus {
+    border-color: var(--accent-gold);
+  }
+  .auth-memo-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+  }
+  .auth-memo-updated {
+    font-size: 11px;
+    color: var(--text-muted);
+  }
+
+  /* 히스토리 */
+  .auth-history-list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .auth-history-item {
+    display: grid;
+    grid-template-columns: 100px 130px 1fr;
+    gap: 12px;
+    padding: 10px 8px;
+    border-radius: 5px;
+    align-items: center;
+    font-size: 12.5px;
+    transition: background 0.1s;
+  }
+  .auth-history-item:hover {
+    background: var(--bg-hover);
+  }
+  .auth-history-time {
+    font-size: 11.5px;
+    color: var(--text-muted);
+    font-weight: 500;
+  }
+  .auth-history-tag {
+    font-size: 10.5px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 4px;
+    text-align: center;
+    letter-spacing: 0.3px;
+  }
+  .tag-green { background: rgba(76,175,80,0.12); color: var(--accent-green); }
+  .tag-gold  { background: rgba(212,165,116,0.15); color: var(--accent-gold); }
+  .tag-warn  { background: rgba(255,152,0,0.12); color: var(--accent-warn); }
+  .tag-red   { background: rgba(232,85,85,0.12); color: var(--accent-red); }
+  .auth-history-text {
+    color: var(--text-primary);
+  }
+
+  /* 하단 저장 바 (스티키) */
+  .auth-bottom-bar {
+    position: sticky;
+    bottom: 0;
+    padding: 14px 20px;
+    background: var(--bg-panel);
+    border: 1px solid var(--border-strong);
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.3);
+    z-index: 10;
+  }
+  .auth-bottom-info {
+    font-size: 13px;
+    color: var(--text-primary);
+    font-weight: 600;
+  }
+  .auth-bottom-info b {
+    color: var(--accent-gold);
+  }
+  .auth-bottom-actions {
+    display: flex;
+    gap: 8px;
+  }
+
+  /* 공통 버튼 */
+  .auth-btn {
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 12.5px;
+    font-weight: 700;
+    cursor: pointer;
+    border: 1px solid;
+    font-family: inherit;
+    transition: all 0.15s;
+  }
+  .auth-btn-primary {
+    background: var(--accent-gold);
+    color: #1a1a1e;
+    border-color: var(--accent-gold);
+  }
+  .auth-btn-primary:hover {
+    background: var(--accent-gold-lt);
+  }
+  .auth-btn-secondary {
+    background: var(--bg-body);
+    color: var(--text-primary);
+    border-color: var(--border);
+  }
+  .auth-btn-secondary:hover {
+    background: var(--bg-elevated);
+    border-color: var(--border-strong);
+  }
+  .auth-btn-danger {
+    background: transparent;
+    color: var(--accent-red);
+    border-color: rgba(232,85,85,0.4);
+  }
+  .auth-btn-danger:hover {
+    background: rgba(232,85,85,0.1);
+  }
+
+  /* 반응형 */
+  @media (max-width: 1024px) {
+    .auth-summary { grid-template-columns: repeat(2, 1fr); }
+    .auth-item { grid-template-columns: 40px 1fr; grid-template-rows: auto auto; }
+    .auth-item-status { grid-column: 1 / -1; }
+    .auth-item-actions { grid-column: 1 / -1; justify-content: flex-end; }
+    .auth-user-card { flex-direction: column; }
+  }
+</style>
+
+<script>
+  (function() {
+    const container = document.getElementById('authPage');
+    if (!container) return;
+
+    const empty = container.querySelector('#authEmpty');
+    const result = container.querySelector('#authResult');
+    const input = container.querySelector('#authSearchInput');
+    const searchBtn = container.querySelector('#authSearchBtn');
+    const bottomBar = container.querySelector('.auth-bottom-bar');
+    const changeCount = bottomBar?.querySelector('b');
+    let changes = 0;
+
+    // 검색 실행
+    const doSearch = (query) => {
+      if (!query) return;
+      empty.style.display = 'none';
+      result.style.display = 'block';
+      input.value = query;
+      // 실제로는 여기서 Firebase 조회하고 데이터 채움
+      // 지금은 그냥 예시 데이터 유지
+    };
+
+    searchBtn?.addEventListener('click', () => doSearch(input.value.trim()));
+    input?.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') doSearch(input.value.trim());
+    });
+
+    // 최근 검색 칩 클릭
+    container.querySelectorAll('.auth-chip[data-uid]').forEach(chip => {
+      chip.addEventListener('click', () => {
+        doSearch(chip.dataset.uid);
+      });
+    });
+
+    // 필터 탭
+    container.querySelectorAll('.auth-filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        container.querySelectorAll('.auth-filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const filter = btn.dataset.filter;
+        container.querySelectorAll('.auth-item').forEach(item => {
+          if (filter === 'all') {
+            item.style.display = '';
+          } else {
+            item.style.display = item.dataset.status === filter ? '' : 'none';
+          }
+        });
+      });
+    });
+
+    // 상태 셀렉트 변경 → 색깔도 바뀜 + 변경 카운트
+    container.querySelectorAll('.auth-status-select').forEach(sel => {
+      const initial = sel.value;
+      sel.addEventListener('change', () => {
+        // 색깔 클래스 바꾸기
+        sel.className = 'auth-status-select';
+        sel.classList.add(`status-${sel.value}`);
+
+        // 아이콘/색깔 바꾸기
+        const item = sel.closest('.auth-item');
+        item.dataset.status = sel.value;
+        const icon = item.querySelector('.auth-item-icon');
+        const iconMap = {
+          approved: { text: '✓', bg: 'rgba(76,175,80,0.1)', color: 'var(--accent-green)' },
+          pending:  { text: '⏱', bg: 'rgba(255,152,0,0.1)', color: 'var(--accent-warn)' },
+          rejected: { text: '✕', bg: 'rgba(232,85,85,0.1)', color: 'var(--accent-red)' },
+          none:     { text: '?', bg: 'rgba(255,255,255,0.05)', color: 'var(--text-muted)' },
+        };
+        const m = iconMap[sel.value];
+        if (m) {
+          icon.textContent = m.text;
+          icon.style.background = m.bg;
+          icon.style.color = m.color;
+        }
+
+        // 변경 카운트
+        if (sel.value !== initial) {
+          changes++;
+        } else if (changes > 0) {
+          changes--;
+        }
+        if (changeCount) changeCount.textContent = changes;
+      });
+    });
+
+    // 빠른 액션 버튼 (승인/거부)
+    container.querySelectorAll('.auth-mini-approve').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const select = btn.closest('.auth-item').querySelector('.auth-status-select');
+        select.value = 'approved';
+        select.dispatchEvent(new Event('change'));
+      });
+    });
+    container.querySelectorAll('.auth-mini-reject').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const select = btn.closest('.auth-item').querySelector('.auth-status-select');
+        select.value = 'rejected';
+        select.dispatchEvent(new Event('change'));
+      });
+    });
+
+    // 저장 버튼 (실제로는 Firebase 저장)
+    container.querySelector('#btnSaveAll')?.addEventListener('click', () => {
+      alert(`${changes}개 변경사항을 저장했습니다. (실제 저장 로직은 나중에 연결)`);
+      changes = 0;
+      if (changeCount) changeCount.textContent = 0;
+    });
+
+    container.querySelector('#btnCancel')?.addEventListener('click', () => {
+      if (confirm('변경사항을 취소하고 초기 상태로 되돌리시겠습니까?')) {
+        location.reload();
+      }
+    });
+
+    // 초기 상태: 최근 검색의 첫번째 회원을 자동으로 보여줌 (편의)
+    doSearch('jinho_88');
+  })();
+</script>
