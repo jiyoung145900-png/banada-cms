@@ -1,6 +1,6 @@
 <!-- ═══════════════════════════════════════════════
-     결제 · 환불 관리 - BANADA CMS
-     회원 계좌 조작 + 광고 수익 시뮬레이션
+     결제 · 환불 관리 - 편집 자유형
+     회원 아이디 자유 입력 + 잔액 인라인 편집
      ═══════════════════════════════════════════════ -->
 
 <div id="paymentsPage">
@@ -10,15 +10,12 @@
     <div>
       <div style="font-size: 11px; color: var(--accent-rose); letter-spacing: 2px; font-weight: 700; margin-bottom: 4px;">PAYMENT & REFUND</div>
       <h1 class="page-title">결제 · 환불 관리</h1>
-      <p class="page-subtitle">회원 계좌에 원금을 입금하고 광고 수익을 지급하여 환급합니다</p>
+      <p class="page-subtitle">회원별 원금·수익금을 자유롭게 편집하고 광고 수익 시뮬레이션이 가능합니다</p>
     </div>
     <div style="text-align: right;">
-      <div style="font-size: 10px; color: var(--text-muted); letter-spacing: 1.5px;">TODAY</div>
-      <div style="font-size: 15px; color: var(--accent-gold); font-weight: 700; margin-top: 2px;">
-        입금 <b>₩12.4M</b> · 지급 <b>₩18.9M</b>
-      </div>
-      <div style="font-size: 11px; color: var(--accent-green); margin-top: 4px;">
-        광고 수익 <b>+₩6.5M</b>
+      <div style="font-size: 10px; color: var(--text-muted); letter-spacing: 1.5px;">저장된 회원</div>
+      <div style="font-size: 18px; color: var(--accent-gold); font-weight: 700; margin-top: 2px;" id="savedCount">
+        <b>0</b>명
       </div>
     </div>
   </div>
@@ -28,98 +25,122 @@
     <div class="pay-summary-card">
       <div class="pay-summary-icon" style="background: rgba(41,182,246,0.1); color: var(--accent-blue);">💰</div>
       <div>
-        <div class="pay-summary-label">오늘 입금</div>
-        <div class="pay-summary-value">₩12,400,000</div>
-        <div class="pay-summary-sub">건수 <b>18</b>건</div>
+        <div class="pay-summary-label">누적 입금</div>
+        <div class="pay-summary-value" id="statDeposit">₩0</div>
+        <div class="pay-summary-sub">전체 회원</div>
       </div>
     </div>
     <div class="pay-summary-card">
       <div class="pay-summary-icon" style="background: rgba(212,165,116,0.15); color: var(--accent-gold);">📈</div>
       <div>
-        <div class="pay-summary-label">광고 수익 발생</div>
-        <div class="pay-summary-value" style="color: var(--accent-gold-lt);">+₩6,500,000</div>
-        <div class="pay-summary-sub">평균 수익률 <b>52.4%</b></div>
+        <div class="pay-summary-label">누적 수익</div>
+        <div class="pay-summary-value" style="color: var(--accent-gold-lt);" id="statProfit">₩0</div>
+        <div class="pay-summary-sub">광고 수익 총액</div>
       </div>
     </div>
     <div class="pay-summary-card">
       <div class="pay-summary-icon" style="background: rgba(76,175,80,0.1); color: var(--accent-green);">💸</div>
       <div>
-        <div class="pay-summary-label">오늘 환급</div>
-        <div class="pay-summary-value">₩18,900,000</div>
-        <div class="pay-summary-sub">건수 <b>14</b>건</div>
+        <div class="pay-summary-label">누적 환급</div>
+        <div class="pay-summary-value" id="statRefund">₩0</div>
+        <div class="pay-summary-sub">지급 완료</div>
       </div>
     </div>
     <div class="pay-summary-card">
-      <div class="pay-summary-icon" style="background: rgba(255,152,0,0.1); color: var(--accent-warn);">⏱</div>
+      <div class="pay-summary-icon" style="background: rgba(255,152,0,0.1); color: var(--accent-warn);">📊</div>
       <div>
-        <div class="pay-summary-label">처리 대기</div>
-        <div class="pay-summary-value">3<span style="font-size: 16px; color: var(--text-muted);">건</span></div>
-        <div class="pay-summary-sub">환급 대기 <b>2</b> · 입금 <b>1</b></div>
+        <div class="pay-summary-label">현재 보유 총액</div>
+        <div class="pay-summary-value" id="statHolding">₩0</div>
+        <div class="pay-summary-sub">전체 회원 잔액</div>
       </div>
     </div>
   </div>
 
-  <!-- 검색바 -->
+  <!-- 회원 검색 / 선택 -->
   <div class="pay-search-bar">
     <div class="pay-search-icon">🔍</div>
     <input
       type="text"
       class="pay-search-input"
       id="paySearchInput"
-      placeholder="회원 아이디 · 전화번호 · 이름으로 검색"
+      placeholder="회원 아이디 입력 (예: jinho_88) - 없으면 새로 생성됩니다"
       autocomplete="off">
-    <button class="pay-search-btn" id="paySearchBtn">회원 조회</button>
+    <button class="pay-search-btn" id="paySearchBtn">불러오기 / 신규</button>
   </div>
 
-  <div class="pay-recent">
-    <span class="pay-recent-label">최근 조작:</span>
-    <button class="pay-chip" data-uid="jinho_88">jinho_88</button>
-    <button class="pay-chip" data-uid="miyoung_09">miyoung_09</button>
-    <button class="pay-chip" data-uid="premium_user">premium_user</button>
-    <button class="pay-chip" data-uid="dahye_love">dahye_love</button>
-  </div>
-
-  <!-- 빈 상태 -->
-  <div class="pay-empty" id="payEmpty" style="display: none;">
-    <div class="pay-empty-icon">💳</div>
-    <div class="pay-empty-title">회원을 검색해주세요</div>
-    <div class="pay-empty-desc">회원을 선택하면 계좌 잔액과 조작 도구가 표시됩니다.</div>
+  <!-- 저장된 회원 목록 -->
+  <div class="pay-recent" id="savedMembers">
+    <span class="pay-recent-label">저장된 회원:</span>
+    <span style="font-size: 12px; color: var(--text-muted);">없음 - 위에서 아이디를 입력해 시작하세요</span>
   </div>
 
   <!-- 회원 조작 영역 -->
-  <div class="pay-result" id="payResult">
+  <div class="pay-result" id="payResult" style="display: none;">
 
-    <!-- 회원 카드 + 잔액 -->
+    <!-- 회원 카드 (편집 가능) -->
     <div class="pay-user-panel">
       <div class="pay-user-info">
-        <div class="pay-user-avatar" style="background: rgba(212,165,116,0.15); color: var(--accent-gold);">J</div>
-        <div>
-          <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
-            <div class="pay-user-name">jinho_88</div>
-            <span class="pay-badge tier-vip">VIP</span>
-            <span class="pay-badge status-active">● 정상</span>
+        <div class="pay-user-avatar" id="userAvatar" style="background: rgba(212,165,116,0.15); color: var(--accent-gold);">?</div>
+        <div style="flex: 1;">
+          <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px; flex-wrap: wrap;">
+            <div class="pay-user-name" id="userIdDisplay">-</div>
+            <select class="pay-badge-select tier-vip" id="userTier">
+              <option value="vip">VIP</option>
+              <option value="vvip">VVIP</option>
+              <option value="regular">일반</option>
+            </select>
+            <select class="pay-badge-select status-active" id="userStatus">
+              <option value="active">● 정상</option>
+              <option value="suspended">● 정지</option>
+              <option value="withdrawn">● 탈퇴</option>
+            </select>
           </div>
-          <div class="pay-user-meta">
-            진호 · 010-1234-5678 · 가입 2024-08-15
+          <div class="pay-user-editable-meta">
+            <label>
+              <span class="pay-meta-label">실명</span>
+              <input type="text" class="pay-meta-input" id="userRealName" placeholder="이름 입력">
+            </label>
+            <label>
+              <span class="pay-meta-label">전화</span>
+              <input type="text" class="pay-meta-input" id="userPhone" placeholder="010-0000-0000">
+            </label>
+            <label>
+              <span class="pay-meta-label">이메일</span>
+              <input type="text" class="pay-meta-input" id="userEmail" placeholder="example@mail.com">
+            </label>
+            <label>
+              <span class="pay-meta-label">메모</span>
+              <input type="text" class="pay-meta-input" id="userMemo" placeholder="비고 사항">
+            </label>
           </div>
+        </div>
+        <div class="pay-user-actions">
+          <button class="pay-mini-action" id="btnDeleteMember" title="이 회원 삭제">🗑</button>
         </div>
       </div>
 
-      <!-- 잔액 3분할 -->
+      <!-- 잔액 3분할 (인라인 편집!) -->
       <div class="pay-balances">
         <div class="pay-balance-item">
-          <div class="pay-balance-label">원금 잔액</div>
-          <div class="pay-balance-value" id="balPrincipal">₩3,000,000</div>
+          <div class="pay-balance-label">
+            원금 잔액 <span class="pay-edit-hint">클릭 편집</span>
+          </div>
+          <div class="pay-balance-value" contenteditable="true" data-field="principal" id="balPrincipal">0</div>
+          <div class="pay-balance-unit">원</div>
         </div>
         <div class="pay-balance-divider">+</div>
         <div class="pay-balance-item">
-          <div class="pay-balance-label">광고 수익금</div>
-          <div class="pay-balance-value" style="color: var(--accent-gold-lt);" id="balProfit">₩1,560,000</div>
+          <div class="pay-balance-label">
+            광고 수익금 <span class="pay-edit-hint">클릭 편집</span>
+          </div>
+          <div class="pay-balance-value" style="color: var(--accent-gold-lt);" contenteditable="true" data-field="profit" id="balProfit">0</div>
+          <div class="pay-balance-unit">원</div>
         </div>
         <div class="pay-balance-divider">=</div>
         <div class="pay-balance-item pay-balance-total">
           <div class="pay-balance-label">총 자산</div>
-          <div class="pay-balance-value" id="balTotal">₩4,560,000</div>
+          <div class="pay-balance-value" id="balTotal">0</div>
+          <div class="pay-balance-unit">원</div>
         </div>
       </div>
     </div>
@@ -133,23 +154,21 @@
           <div class="pay-action-icon" style="background: rgba(41,182,246,0.15); color: var(--accent-blue);">💰</div>
           <div>
             <div class="pay-action-title">원금 입금</div>
-            <div class="pay-action-desc">회원 계좌에 원금을 충전합니다</div>
+            <div class="pay-action-desc">원금 잔액에 금액을 더합니다</div>
           </div>
         </div>
         <div class="pay-action-body">
           <label class="pay-mini-label">입금 금액 (원)</label>
-          <div class="pay-amount-input-wrap">
-            <input type="text" class="pay-amount-input" id="depositAmount" placeholder="0" value="1,000,000">
-            <div class="pay-quick-amounts">
-              <button class="pay-quick" data-amount="100000">+10만</button>
-              <button class="pay-quick" data-amount="500000">+50만</button>
-              <button class="pay-quick" data-amount="1000000">+100만</button>
-              <button class="pay-quick" data-amount="5000000">+500만</button>
-            </div>
+          <input type="text" class="pay-amount-input" id="depositAmount" placeholder="0" value="1,000,000">
+          <div class="pay-quick-amounts">
+            <button class="pay-quick" data-amount="100000">+10만</button>
+            <button class="pay-quick" data-amount="500000">+50만</button>
+            <button class="pay-quick" data-amount="1000000">+100만</button>
+            <button class="pay-quick" data-amount="5000000">+500만</button>
           </div>
-          <label class="pay-mini-label">사유 / 메모</label>
-          <input type="text" class="pay-input" id="depositMemo" placeholder="예: 프리미엄 서비스 원금 충전">
-          <button class="pay-do-btn pay-do-deposit" id="btnDeposit">💰 원금 입금하기</button>
+          <label class="pay-mini-label">메모</label>
+          <input type="text" class="pay-input" id="depositMemo" placeholder="예: 프리미엄 광고 참여">
+          <button class="pay-do-btn pay-do-deposit" id="btnDeposit">💰 원금 입금</button>
         </div>
       </div>
 
@@ -159,7 +178,7 @@
           <div class="pay-action-icon" style="background: rgba(212,165,116,0.15); color: var(--accent-gold);">📈</div>
           <div>
             <div class="pay-action-title">광고 수익 발생</div>
-            <div class="pay-action-desc">원금 대비 광고 수익을 지급합니다</div>
+            <div class="pay-action-desc">원금 대비 수익률을 계산하여 지급합니다</div>
           </div>
         </div>
         <div class="pay-action-body">
@@ -170,15 +189,15 @@
             <button class="pay-rate active" data-rate="50">+50%</button>
             <button class="pay-rate" data-rate="70">+70%</button>
             <button class="pay-rate" data-rate="100">+100%</button>
-            <button class="pay-rate" data-rate="custom">직접입력</button>
+            <button class="pay-rate" data-rate="200">+200%</button>
           </div>
-          <label class="pay-mini-label">수익률 (%)</label>
-          <input type="number" class="pay-input" id="profitRate" value="50" min="0" max="500">
+          <label class="pay-mini-label">수익률 직접 입력 (%)</label>
+          <input type="number" class="pay-input" id="profitRate" value="50" min="0" max="1000">
 
           <div class="pay-calc-preview">
             <div class="pay-calc-row">
               <span>원금</span>
-              <span id="calcPrincipal">₩3,000,000</span>
+              <span id="calcPrincipal">₩0</span>
             </div>
             <div class="pay-calc-row">
               <span>× 수익률</span>
@@ -186,14 +205,14 @@
             </div>
             <div class="pay-calc-row pay-calc-result">
               <span>발생 수익</span>
-              <span style="color: var(--accent-gold-lt);" id="calcProfit">+₩1,500,000</span>
+              <span style="color: var(--accent-gold-lt);" id="calcProfit">+₩0</span>
             </div>
           </div>
           <button class="pay-do-btn pay-do-profit" id="btnProfit">📈 광고 수익 지급</button>
         </div>
       </div>
 
-      <!-- 💸 출금/환급 -->
+      <!-- 💸 환급 -->
       <div class="pay-action-card action-refund">
         <div class="pay-action-header">
           <div class="pay-action-icon" style="background: rgba(76,175,80,0.1); color: var(--accent-green);">💸</div>
@@ -206,15 +225,15 @@
           <div class="pay-refund-preview">
             <div class="pay-refund-row">
               <span>원금 잔액</span>
-              <span id="refundPrincipal">₩3,000,000</span>
+              <span id="refundPrincipal">₩0</span>
             </div>
             <div class="pay-refund-row">
               <span>+ 광고 수익금</span>
-              <span style="color: var(--accent-gold-lt);" id="refundProfit">₩1,560,000</span>
+              <span style="color: var(--accent-gold-lt);" id="refundProfit">₩0</span>
             </div>
             <div class="pay-refund-row pay-refund-total">
               <span>환급 총액</span>
-              <span id="refundTotal">₩4,560,000</span>
+              <span id="refundTotal">₩0</span>
             </div>
           </div>
 
@@ -225,9 +244,9 @@
             <option value="cash">현금 지급</option>
           </select>
 
-          <label class="pay-mini-label">환급 사유</label>
+          <label class="pay-mini-label">사유</label>
           <input type="text" class="pay-input" id="refundMemo" placeholder="예: 서비스 정산 완료">
-          <button class="pay-do-btn pay-do-refund" id="btnRefund">💸 전액 환급하기</button>
+          <button class="pay-do-btn pay-do-refund" id="btnRefund">💸 전액 환급</button>
         </div>
       </div>
     </div>
@@ -238,12 +257,16 @@
         <div style="font-size: 13px; font-weight: 700; color: var(--text-primary); display: flex; align-items: center; gap: 6px;">
           <span style="color: var(--accent-gold);">◈</span>
           거래 히스토리
+          <span id="historyMemberName" style="color: var(--text-muted); font-weight: 500; font-size: 12px; margin-left: 6px;"></span>
         </div>
-        <div class="pay-history-filter">
-          <button class="pay-filter-btn active" data-type="all">전체</button>
-          <button class="pay-filter-btn" data-type="deposit">입금</button>
-          <button class="pay-filter-btn" data-type="profit">수익</button>
-          <button class="pay-filter-btn" data-type="refund">환급</button>
+        <div style="display: flex; gap: 8px; align-items: center;">
+          <div class="pay-history-filter">
+            <button class="pay-filter-btn active" data-type="all">전체</button>
+            <button class="pay-filter-btn" data-type="deposit">입금</button>
+            <button class="pay-filter-btn" data-type="profit">수익</button>
+            <button class="pay-filter-btn" data-type="refund">환급</button>
+          </div>
+          <button class="pay-clear-history" id="btnClearHistory" title="히스토리 초기화">🗑</button>
         </div>
       </div>
       <table class="pay-history-table">
@@ -254,74 +277,36 @@
             <td>내역</td>
             <td style="width: 130px; text-align: right;">금액</td>
             <td style="width: 100px; text-align: right;">잔액</td>
-            <td style="width: 80px;">처리자</td>
           </tr>
         </thead>
         <tbody id="payHistoryBody">
-          <tr data-type="refund">
-            <td class="pay-hist-time">방금 전<div class="pay-hist-sub">10:24</div></td>
-            <td><span class="pay-hist-tag tag-refund">환급</span></td>
-            <td class="pay-hist-desc">전액 환급 · 계좌 이체 · 서비스 정산 완료</td>
-            <td class="pay-hist-amount amount-out">-₩4,560,000</td>
-            <td class="pay-hist-balance">₩0</td>
-            <td class="pay-hist-op">관리자</td>
-          </tr>
-          <tr data-type="profit">
-            <td class="pay-hist-time">3시간 전<div class="pay-hist-sub">07:15</div></td>
-            <td><span class="pay-hist-tag tag-profit">수익</span></td>
-            <td class="pay-hist-desc">광고 수익 발생 (+52%) · 프리미엄 광고 노출</td>
-            <td class="pay-hist-amount amount-in">+₩1,560,000</td>
-            <td class="pay-hist-balance">₩4,560,000</td>
-            <td class="pay-hist-op">관리자</td>
-          </tr>
-          <tr data-type="deposit">
-            <td class="pay-hist-time">4시간 전<div class="pay-hist-sub">06:22</div></td>
-            <td><span class="pay-hist-tag tag-deposit">입금</span></td>
-            <td class="pay-hist-desc">원금 입금 · 프리미엄 서비스 원금 충전</td>
-            <td class="pay-hist-amount amount-in">+₩3,000,000</td>
-            <td class="pay-hist-balance">₩3,000,000</td>
-            <td class="pay-hist-op">관리자</td>
-          </tr>
-          <tr data-type="refund">
-            <td class="pay-hist-time">어제<div class="pay-hist-sub">18:44</div></td>
-            <td><span class="pay-hist-tag tag-refund">환급</span></td>
-            <td class="pay-hist-desc">전액 환급 · 계좌 이체</td>
-            <td class="pay-hist-amount amount-out">-₩1,800,000</td>
-            <td class="pay-hist-balance">₩0</td>
-            <td class="pay-hist-op">관리자</td>
-          </tr>
-          <tr data-type="profit">
-            <td class="pay-hist-time">어제<div class="pay-hist-sub">14:20</div></td>
-            <td><span class="pay-hist-tag tag-profit">수익</span></td>
-            <td class="pay-hist-desc">광고 수익 발생 (+80%)</td>
-            <td class="pay-hist-amount amount-in">+₩800,000</td>
-            <td class="pay-hist-balance">₩1,800,000</td>
-            <td class="pay-hist-op">관리자</td>
-          </tr>
-          <tr data-type="deposit">
-            <td class="pay-hist-time">어제<div class="pay-hist-sub">13:11</div></td>
-            <td><span class="pay-hist-tag tag-deposit">입금</span></td>
-            <td class="pay-hist-desc">원금 입금 · 기본 광고 참여</td>
-            <td class="pay-hist-amount amount-in">+₩1,000,000</td>
-            <td class="pay-hist-balance">₩1,000,000</td>
-            <td class="pay-hist-op">관리자</td>
-          </tr>
-          <tr data-type="refund">
-            <td class="pay-hist-time">3일 전<div class="pay-hist-sub">2026-09-15</div></td>
-            <td><span class="pay-hist-tag tag-refund">환급</span></td>
-            <td class="pay-hist-desc">전액 환급 · 계좌 이체</td>
-            <td class="pay-hist-amount amount-out">-₩7,500,000</td>
-            <td class="pay-hist-balance">₩0</td>
-            <td class="pay-hist-op">관리자</td>
+          <tr class="pay-history-empty">
+            <td colspan="5" style="text-align: center; padding: 40px; color: var(--text-muted); font-size: 12.5px;">
+              거래 내역이 없습니다. 원금 입금부터 시작하세요.
+            </td>
           </tr>
         </tbody>
       </table>
     </div>
 
-    <!-- 하단 안전 안내 -->
+    <!-- 하단 저장 정보 -->
     <div class="pay-warning">
-      <span style="color: var(--accent-warn); margin-right: 8px;">⚠</span>
-      <b>주의</b>: 모든 조작은 로그로 남으며 되돌릴 수 없습니다. 실수 방지를 위해 <b>큰 금액은 확인 창</b>이 표시됩니다.
+      <span style="color: var(--accent-green); margin-right: 8px;">💾</span>
+      <b>자동 저장 중</b> · 모든 변경사항은 이 브라우저에 저장되어 새로고침 후에도 유지됩니다.
+      <span style="margin-left: auto; color: var(--text-muted); font-size: 11px;" id="lastSaved">저장 대기 중</span>
+    </div>
+  </div>
+
+  <!-- 회원 없을 때 안내 -->
+  <div class="pay-empty" id="payEmpty">
+    <div class="pay-empty-icon">💳</div>
+    <div class="pay-empty-title">회원 아이디를 입력하고 시작하세요</div>
+    <div class="pay-empty-desc">아무 아이디나 입력할 수 있으며, 없는 회원이면 새로 생성됩니다.</div>
+    <div style="margin-top: 20px; display: flex; gap: 8px; justify-content: center; flex-wrap: wrap;">
+      <button class="pay-quick-start" data-uid="jinho_88">jinho_88</button>
+      <button class="pay-quick-start" data-uid="miyoung_09">miyoung_09</button>
+      <button class="pay-quick-start" data-uid="premium_user">premium_user</button>
+      <button class="pay-quick-start" data-uid="test_member">test_member</button>
     </div>
   </div>
 </div>
@@ -362,7 +347,7 @@
     margin-bottom: 4px;
   }
   .pay-summary-value {
-    font-size: 20px;
+    font-size: 18px;
     font-weight: 800;
     color: var(--text-primary);
     line-height: 1;
@@ -373,9 +358,6 @@
   .pay-summary-sub {
     font-size: 11px;
     color: var(--text-muted);
-  }
-  .pay-summary-sub b {
-    color: var(--accent-gold);
   }
 
   /* 검색바 */
@@ -407,7 +389,7 @@
   }
   .pay-search-input::placeholder { color: var(--text-muted); }
   .pay-search-btn {
-    padding: 10px 24px;
+    padding: 10px 20px;
     background: var(--accent-gold);
     color: #1a1a1e;
     border: none;
@@ -416,6 +398,7 @@
     font-weight: 700;
     cursor: pointer;
     font-family: inherit;
+    white-space: nowrap;
   }
   .pay-search-btn:hover { background: var(--accent-gold-lt); }
 
@@ -432,7 +415,10 @@
     font-weight: 600;
   }
   .pay-chip {
-    padding: 5px 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 5px 8px 5px 12px;
     background: var(--bg-panel);
     border: 1px solid var(--border);
     border-radius: 20px;
@@ -447,6 +433,19 @@
     color: var(--accent-gold-lt);
     border-color: rgba(212,165,116,0.3);
   }
+  .pay-chip.active {
+    background: rgba(212,165,116,0.15);
+    color: var(--accent-gold-lt);
+    border-color: var(--accent-gold);
+  }
+  .pay-chip-del {
+    color: var(--text-muted);
+    padding: 2px 4px;
+    border-radius: 50%;
+    line-height: 1;
+    font-size: 11px;
+  }
+  .pay-chip-del:hover { background: rgba(232,85,85,0.2); color: var(--accent-red); }
 
   /* 회원 패널 */
   .pay-user-panel {
@@ -460,7 +459,7 @@
   .pay-user-info {
     display: flex;
     gap: 16px;
-    align-items: center;
+    align-items: flex-start;
     margin-bottom: 20px;
     padding-bottom: 18px;
     border-bottom: 1px solid var(--border);
@@ -475,27 +474,86 @@
     font-size: 22px;
     font-weight: 800;
     border: 2px solid rgba(212,165,116,0.3);
+    flex-shrink: 0;
   }
   .pay-user-name {
-    font-size: 18px;
+    font-size: 20px;
     font-weight: 800;
     color: var(--text-primary);
     font-family: 'JetBrains Mono', monospace;
   }
-  .pay-badge {
+  .pay-badge-select {
     font-size: 10.5px;
-    padding: 3px 8px;
+    padding: 4px 8px;
     border-radius: 4px;
     font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+    border: 1px solid;
+    outline: none;
+    transition: all 0.15s;
   }
-  .tier-vip { background: rgba(212,165,116,0.15); color: var(--accent-gold-lt); }
-  .status-active { background: rgba(76,175,80,0.15); color: var(--accent-green); }
-  .pay-user-meta {
-    font-size: 12px;
+  .pay-badge-select.tier-vip {
+    background: rgba(212,165,116,0.15);
+    color: var(--accent-gold-lt);
+    border-color: rgba(212,165,116,0.3);
+  }
+  .pay-badge-select.status-active {
+    background: rgba(76,175,80,0.15);
+    color: var(--accent-green);
+    border-color: rgba(76,175,80,0.3);
+  }
+  .pay-user-editable-meta {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 8px 20px;
+  }
+  .pay-user-editable-meta label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .pay-meta-label {
+    font-size: 11px;
     color: var(--text-muted);
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    min-width: 40px;
+  }
+  .pay-meta-input {
+    flex: 1;
+    padding: 5px 8px;
+    background: var(--bg-body);
+    border: 1px solid transparent;
+    border-radius: 4px;
+    color: var(--text-primary);
+    font-size: 12.5px;
+    font-family: inherit;
+    outline: none;
+    transition: all 0.15s;
+  }
+  .pay-meta-input:hover { border-color: var(--border); }
+  .pay-meta-input:focus { border-color: var(--accent-gold); background: var(--bg-panel); }
+
+  .pay-user-actions { display: flex; flex-direction: column; gap: 6px; }
+  .pay-mini-action {
+    width: 32px;
+    height: 32px;
+    background: var(--bg-body);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.15s;
+  }
+  .pay-mini-action:hover {
+    background: rgba(232,85,85,0.1);
+    color: var(--accent-red);
+    border-color: rgba(232,85,85,0.3);
   }
 
-  /* 잔액 3분할 */
+  /* 잔액 3분할 (인라인 편집 가능!) */
   .pay-balances {
     display: grid;
     grid-template-columns: 1fr 24px 1fr 24px 1fr;
@@ -508,9 +566,11 @@
     border-radius: 8px;
     text-align: center;
     border: 1px solid var(--border);
+    position: relative;
+    transition: all 0.15s;
   }
   .pay-balance-item.pay-balance-total {
-    background: linear-gradient(135deg, rgba(212,165,116,0.08), rgba(228,182,137,0.03));
+    background: linear-gradient(135deg, rgba(212,165,116,0.1), rgba(228,182,137,0.03));
     border-color: rgba(212,165,116,0.3);
   }
   .pay-balance-label {
@@ -519,7 +579,21 @@
     letter-spacing: 1px;
     font-weight: 700;
     text-transform: uppercase;
-    margin-bottom: 6px;
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+  }
+  .pay-edit-hint {
+    font-size: 8.5px;
+    color: var(--accent-gold);
+    background: rgba(212,165,116,0.1);
+    padding: 1px 5px;
+    border-radius: 3px;
+    letter-spacing: 0.3px;
+    font-weight: 600;
+    text-transform: none;
   }
   .pay-balance-value {
     font-size: 22px;
@@ -527,9 +601,30 @@
     color: var(--text-primary);
     font-family: 'JetBrains Mono', monospace;
     letter-spacing: -0.5px;
+    outline: none;
+    padding: 4px 8px;
+    border-radius: 4px;
+    transition: all 0.15s;
+    cursor: text;
+    min-height: 30px;
+  }
+  .pay-balance-value[contenteditable="true"]:hover {
+    background: rgba(212,165,116,0.05);
+    box-shadow: inset 0 0 0 1px rgba(212,165,116,0.2);
+  }
+  .pay-balance-value[contenteditable="true"]:focus {
+    background: rgba(212,165,116,0.1);
+    box-shadow: inset 0 0 0 2px var(--accent-gold);
   }
   .pay-balance-total .pay-balance-value {
     color: var(--accent-gold-lt);
+    cursor: default;
+  }
+  .pay-balance-unit {
+    font-size: 10px;
+    color: var(--text-muted);
+    margin-top: 4px;
+    font-weight: 600;
   }
   .pay-balance-divider {
     text-align: center;
@@ -583,9 +678,7 @@
     color: var(--text-muted);
     line-height: 1.4;
   }
-  .pay-action-body {
-    padding: 16px 18px;
-  }
+  .pay-action-body { padding: 16px 18px; }
   .pay-mini-label {
     display: block;
     font-size: 10.5px;
@@ -611,8 +704,6 @@
   }
   .pay-input:focus { border-color: var(--accent-gold); }
 
-  /* 금액 입력 */
-  .pay-amount-input-wrap { margin-bottom: 8px; }
   .pay-amount-input {
     width: 100%;
     padding: 12px 14px;
@@ -635,6 +726,7 @@
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 4px;
+    margin-bottom: 8px;
   }
   .pay-quick {
     padding: 6px 8px;
@@ -654,7 +746,6 @@
     border-color: rgba(212,165,116,0.3);
   }
 
-  /* 수익률 그리드 */
   .pay-rate-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -683,15 +774,14 @@
     border-color: var(--accent-gold);
   }
 
-  /* 수익 계산 미리보기 */
-  .pay-calc-preview {
+  .pay-calc-preview, .pay-refund-preview {
     background: var(--bg-body);
     border: 1px solid var(--border);
     border-radius: 6px;
     padding: 12px 14px;
     margin: 12px 0;
   }
-  .pay-calc-row {
+  .pay-calc-row, .pay-refund-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -699,53 +789,21 @@
     font-size: 12px;
     color: var(--text-secondary);
   }
-  .pay-calc-row span:last-child {
+  .pay-calc-row span:last-child, .pay-refund-row span:last-child {
     font-family: 'JetBrains Mono', monospace;
     font-weight: 700;
     color: var(--text-primary);
   }
-  .pay-calc-result {
+  .pay-calc-result, .pay-refund-total {
     border-top: 1px dashed var(--border);
     margin-top: 6px;
     padding-top: 8px;
     font-size: 13px;
     font-weight: 700;
-    color: var(--accent-gold-lt);
   }
+  .pay-calc-result { color: var(--accent-gold-lt); }
+  .pay-refund-total span:last-child { color: var(--accent-green); }
 
-  /* 환급 미리보기 */
-  .pay-refund-preview {
-    background: var(--bg-body);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 12px 14px;
-    margin-bottom: 12px;
-  }
-  .pay-refund-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 4px 0;
-    font-size: 12px;
-    color: var(--text-secondary);
-  }
-  .pay-refund-row span:last-child {
-    font-family: 'JetBrains Mono', monospace;
-    font-weight: 700;
-    color: var(--text-primary);
-  }
-  .pay-refund-total {
-    border-top: 1px dashed var(--border);
-    margin-top: 6px;
-    padding-top: 8px;
-    font-size: 14px;
-    font-weight: 700;
-  }
-  .pay-refund-total span:last-child {
-    color: var(--accent-green);
-  }
-
-  /* 실행 버튼 */
   .pay-do-btn {
     width: 100%;
     padding: 12px 16px;
@@ -758,10 +816,7 @@
     margin-top: 12px;
     transition: all 0.15s;
   }
-  .pay-do-deposit {
-    background: var(--accent-blue);
-    color: #fff;
-  }
+  .pay-do-deposit { background: var(--accent-blue); color: #fff; }
   .pay-do-deposit:hover {
     background: #4fc3f7;
     box-shadow: 0 4px 12px rgba(41,182,246,0.3);
@@ -773,10 +828,7 @@
   .pay-do-profit:hover {
     box-shadow: 0 4px 12px rgba(212,165,116,0.4);
   }
-  .pay-do-refund {
-    background: var(--accent-green);
-    color: #fff;
-  }
+  .pay-do-refund { background: var(--accent-green); color: #fff; }
   .pay-do-refund:hover {
     background: #66d970;
     box-shadow: 0 4px 12px rgba(76,175,80,0.3);
@@ -797,6 +849,8 @@
     align-items: center;
     border-bottom: 1px solid var(--border);
     background: var(--bg-card);
+    gap: 12px;
+    flex-wrap: wrap;
   }
   .pay-history-filter {
     display: flex;
@@ -826,6 +880,22 @@
     background: rgba(212,165,116,0.15);
     color: var(--accent-gold-lt);
   }
+  .pay-clear-history {
+    padding: 5px 10px;
+    background: var(--bg-body);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    color: var(--text-secondary);
+    font-size: 13px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.15s;
+  }
+  .pay-clear-history:hover {
+    background: rgba(232,85,85,0.1);
+    color: var(--accent-red);
+    border-color: rgba(232,85,85,0.3);
+  }
 
   .pay-history-table {
     width: 100%;
@@ -849,7 +919,7 @@
     color: var(--text-primary);
     vertical-align: middle;
   }
-  .pay-history-table tbody tr:hover {
+  .pay-history-table tbody tr:hover:not(.pay-history-empty) {
     background: var(--bg-hover);
   }
   .pay-history-table tbody tr:last-child td { border-bottom: none; }
@@ -893,24 +963,19 @@
     color: var(--text-secondary);
     font-size: 12px;
   }
-  .pay-hist-op {
-    font-size: 11.5px;
-    color: var(--text-muted);
-  }
 
-  /* 하단 안내 */
   .pay-warning {
     padding: 12px 16px;
-    background: rgba(255,152,0,0.06);
-    border: 1px solid rgba(255,152,0,0.2);
-    border-left: 3px solid var(--accent-warn);
+    background: rgba(76,175,80,0.05);
+    border: 1px solid rgba(76,175,80,0.15);
+    border-left: 3px solid var(--accent-green);
     border-radius: 6px;
     font-size: 12px;
     color: var(--text-secondary);
     display: flex;
     align-items: center;
   }
-  .pay-warning b { color: var(--accent-warn); }
+  .pay-warning b { color: var(--accent-green); }
 
   /* 빈 상태 */
   .pay-empty {
@@ -935,6 +1000,24 @@
     font-size: 12.5px;
     color: var(--text-muted);
   }
+  .pay-quick-start {
+    padding: 8px 16px;
+    background: var(--bg-body);
+    border: 1px solid var(--border-strong);
+    border-radius: 6px;
+    color: var(--accent-gold-lt);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    font-family: 'JetBrains Mono', monospace;
+    transition: all 0.15s;
+  }
+  .pay-quick-start:hover {
+    background: rgba(212,165,116,0.1);
+    border-color: var(--accent-gold);
+    transform: translateY(-1px);
+  }
 
   /* 반응형 */
   @media (max-width: 1200px) {
@@ -944,6 +1027,7 @@
   }
   @media (max-width: 768px) {
     .pay-summary { grid-template-columns: repeat(2, 1fr); }
+    .pay-user-editable-meta { grid-template-columns: 1fr; }
   }
 </style>
 
@@ -952,42 +1036,328 @@
     const container = document.getElementById('paymentsPage');
     if (!container) return;
 
-    // 초기 상태 값
-    let principal = 3000000;
-    let profit = 1560000;
+    const STORAGE_KEY = 'banada_payments_members_v1';
+    let members = {};  // { userId: { info, balance, history } }
+    let currentUserId = null;
+    let saveTimer = null;
 
-    // 금액 콤마 포맷
-    const format = (n) => '₩' + n.toLocaleString('ko-KR');
+    // ─── LocalStorage ───
+    const loadAll = () => {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) members = JSON.parse(raw);
+      } catch (e) { console.error(e); members = {}; }
+    };
+    const saveAll = () => {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(members));
+        const now = new Date();
+        const t = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}:${String(now.getSeconds()).padStart(2,'0')}`;
+        container.querySelector('#lastSaved').textContent = `마지막 저장: ${t}`;
+      } catch (e) { console.error(e); }
+    };
+    const debouncedSave = () => {
+      if (saveTimer) clearTimeout(saveTimer);
+      saveTimer = setTimeout(saveAll, 400);
+    };
+
+    // ─── 유틸 ───
+    const format = (n) => '₩' + (Number(n) || 0).toLocaleString('ko-KR');
     const parseAmount = (s) => parseInt(String(s).replace(/[^\d]/g, '')) || 0;
 
-    // 잔액 업데이트
-    const updateBalance = () => {
-      container.querySelector('#balPrincipal').textContent = format(principal);
-      container.querySelector('#balProfit').textContent = format(profit);
-      container.querySelector('#balTotal').textContent = format(principal + profit);
+    // ─── 새 회원 생성 ───
+    const createMember = (userId) => {
+      members[userId] = {
+        info: {
+          realName: '', phone: '', email: '', memo: '',
+          tier: 'vip', status: 'active',
+        },
+        balance: { principal: 0, profit: 0 },
+        history: [],
+      };
+    };
+
+    // ─── 회원 로드 ───
+    const loadMember = (userId) => {
+      if (!userId) return;
+      if (!members[userId]) createMember(userId);
+      currentUserId = userId;
+      const m = members[userId];
+
+      // UI 표시
+      container.querySelector('#payEmpty').style.display = 'none';
+      container.querySelector('#payResult').style.display = 'block';
+      container.querySelector('#userIdDisplay').textContent = userId;
+      container.querySelector('#userAvatar').textContent = userId.charAt(0).toUpperCase();
+      container.querySelector('#historyMemberName').textContent = `· ${userId}`;
+
+      // 정보 채우기
+      container.querySelector('#userRealName').value = m.info.realName || '';
+      container.querySelector('#userPhone').value = m.info.phone || '';
+      container.querySelector('#userEmail').value = m.info.email || '';
+      container.querySelector('#userMemo').value = m.info.memo || '';
+      container.querySelector('#userTier').value = m.info.tier || 'vip';
+      container.querySelector('#userStatus').value = m.info.status || 'active';
+
+      // 잔액 채우기
+      container.querySelector('#balPrincipal').textContent = (m.balance.principal || 0).toLocaleString('ko-KR');
+      container.querySelector('#balProfit').textContent = (m.balance.profit || 0).toLocaleString('ko-KR');
+      updateTotals();
+
+      // 히스토리 렌더
+      renderHistory();
+
+      // 검색바 업데이트
+      container.querySelector('#paySearchInput').value = userId;
+
+      updateChips();
+      updateStats();
+    };
+
+    // ─── 총액 업데이트 ───
+    const updateTotals = () => {
+      if (!currentUserId) return;
+      const m = members[currentUserId];
+      const principal = m.balance.principal || 0;
+      const profit = m.balance.profit || 0;
+      const total = principal + profit;
+
+      container.querySelector('#balTotal').textContent = total.toLocaleString('ko-KR');
       container.querySelector('#calcPrincipal').textContent = format(principal);
       container.querySelector('#refundPrincipal').textContent = format(principal);
       container.querySelector('#refundProfit').textContent = format(profit);
-      container.querySelector('#refundTotal').textContent = format(principal + profit);
+      container.querySelector('#refundTotal').textContent = format(total);
       updateProfitCalc();
     };
 
-    // 수익 계산 미리보기
+    // ─── 수익 계산 ───
     const updateProfitCalc = () => {
+      if (!currentUserId) return;
+      const principal = members[currentUserId].balance.principal || 0;
       const rate = parseFloat(container.querySelector('#profitRate').value) || 0;
       const profitAmount = Math.floor(principal * rate / 100);
       container.querySelector('#calcRate').textContent = rate + '%';
       container.querySelector('#calcProfit').textContent = '+' + format(profitAmount);
     };
 
-    // 금액 입력 콤마 포맷
+    // ─── 저장된 회원 칩 업데이트 ───
+    const updateChips = () => {
+      const chipsWrap = container.querySelector('#savedMembers');
+      const ids = Object.keys(members);
+      container.querySelector('#savedCount').innerHTML = `<b>${ids.length}</b>명`;
+
+      if (ids.length === 0) {
+        chipsWrap.innerHTML = '<span class="pay-recent-label">저장된 회원:</span><span style="font-size: 12px; color: var(--text-muted);">없음 - 위에서 아이디를 입력해 시작하세요</span>';
+        return;
+      }
+
+      let html = '<span class="pay-recent-label">저장된 회원:</span>';
+      ids.forEach(id => {
+        const active = id === currentUserId ? 'active' : '';
+        html += `<span class="pay-chip ${active}" data-uid="${id}">
+          <span class="pay-chip-name">${id}</span>
+          <span class="pay-chip-del" data-del="${id}" title="삭제">✕</span>
+        </span>`;
+      });
+      chipsWrap.innerHTML = html;
+
+      // 칩 이벤트
+      chipsWrap.querySelectorAll('.pay-chip').forEach(chip => {
+        chip.querySelector('.pay-chip-name').addEventListener('click', () => {
+          loadMember(chip.dataset.uid);
+        });
+        chip.querySelector('.pay-chip-del')?.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const id = e.target.dataset.del;
+          if (!confirm(`${id} 회원 데이터를 삭제하시겠습니까?`)) return;
+          delete members[id];
+          if (currentUserId === id) {
+            currentUserId = null;
+            container.querySelector('#payResult').style.display = 'none';
+            container.querySelector('#payEmpty').style.display = 'block';
+          }
+          debouncedSave();
+          updateChips();
+          updateStats();
+        });
+      });
+    };
+
+    // ─── 전체 통계 ───
+    const updateStats = () => {
+      let totalDeposit = 0, totalProfit = 0, totalRefund = 0, totalHolding = 0;
+      Object.values(members).forEach(m => {
+        totalHolding += (m.balance.principal || 0) + (m.balance.profit || 0);
+        (m.history || []).forEach(h => {
+          if (h.type === 'deposit') totalDeposit += h.amount;
+          else if (h.type === 'profit') totalProfit += h.amount;
+          else if (h.type === 'refund') totalRefund += h.amount;
+        });
+      });
+      container.querySelector('#statDeposit').textContent = format(totalDeposit);
+      container.querySelector('#statProfit').textContent = format(totalProfit);
+      container.querySelector('#statRefund').textContent = format(totalRefund);
+      container.querySelector('#statHolding').textContent = format(totalHolding);
+    };
+
+    // ─── 히스토리 렌더 ───
+    const renderHistory = () => {
+      if (!currentUserId) return;
+      const tbody = container.querySelector('#payHistoryBody');
+      const history = members[currentUserId].history || [];
+      const filterBtn = container.querySelector('.pay-filter-btn.active');
+      const filter = filterBtn?.dataset.type || 'all';
+
+      const filtered = filter === 'all' ? history : history.filter(h => h.type === filter);
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `<tr class="pay-history-empty">
+          <td colspan="5" style="text-align: center; padding: 40px; color: var(--text-muted); font-size: 12.5px;">
+            거래 내역이 없습니다.
+          </td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = filtered.map(h => {
+        const d = new Date(h.time);
+        const dateStr = h.time > Date.now() - 86400000
+          ? '오늘'
+          : `${d.getMonth()+1}/${d.getDate()}`;
+        const timeStr = `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+        const tag = h.type === 'deposit' ? '입금' : h.type === 'profit' ? '수익' : '환급';
+        const isOut = h.type === 'refund';
+        return `<tr data-type="${h.type}">
+          <td class="pay-hist-time">${dateStr}<div class="pay-hist-sub">${timeStr}</div></td>
+          <td><span class="pay-hist-tag tag-${h.type}">${tag}</span></td>
+          <td class="pay-hist-desc">${h.desc || '-'}</td>
+          <td class="pay-hist-amount ${isOut ? 'amount-out' : 'amount-in'}">${isOut ? '-' : '+'}${format(h.amount)}</td>
+          <td class="pay-hist-balance">${format(h.balance)}</td>
+        </tr>`;
+      }).join('');
+    };
+
+    // ─── 히스토리 추가 ───
+    const addHistory = (type, desc, amount, balance) => {
+      if (!currentUserId) return;
+      members[currentUserId].history = members[currentUserId].history || [];
+      members[currentUserId].history.unshift({
+        time: Date.now(), type, desc, amount, balance,
+      });
+      renderHistory();
+      updateStats();
+      debouncedSave();
+    };
+
+    // ═══ 이벤트 리스너 ═══
+
+    // 검색 실행
+    const doSearch = (query) => {
+      const q = query.trim();
+      if (!q) return;
+      loadMember(q);
+    };
+    container.querySelector('#paySearchBtn')?.addEventListener('click', () => {
+      doSearch(container.querySelector('#paySearchInput').value);
+    });
+    container.querySelector('#paySearchInput')?.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') doSearch(e.target.value);
+    });
+
+    // 빠른 시작 버튼
+    container.querySelectorAll('.pay-quick-start').forEach(btn => {
+      btn.addEventListener('click', () => loadMember(btn.dataset.uid));
+    });
+
+    // 회원 정보 입력 변경 → 저장
+    ['userRealName', 'userPhone', 'userEmail', 'userMemo'].forEach(id => {
+      const el = container.querySelector('#' + id);
+      const field = id.replace('user', '').replace(/^./, c => c.toLowerCase());
+      el?.addEventListener('input', () => {
+        if (!currentUserId) return;
+        members[currentUserId].info[field] = el.value;
+        debouncedSave();
+      });
+    });
+    container.querySelector('#userTier')?.addEventListener('change', (e) => {
+      if (!currentUserId) return;
+      members[currentUserId].info.tier = e.target.value;
+      debouncedSave();
+    });
+    container.querySelector('#userStatus')?.addEventListener('change', (e) => {
+      if (!currentUserId) return;
+      members[currentUserId].info.status = e.target.value;
+      debouncedSave();
+    });
+
+    // 잔액 인라인 편집
+    ['balPrincipal', 'balProfit'].forEach(id => {
+      const el = container.querySelector('#' + id);
+      const field = id === 'balPrincipal' ? 'principal' : 'profit';
+
+      el?.addEventListener('focus', () => {
+        // 편집 시 콤마 제거
+        const value = parseAmount(el.textContent);
+        el.textContent = value;
+        // 전체 선택
+        const range = document.createRange();
+        range.selectNodeContents(el);
+        const sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(range);
+      });
+
+      el?.addEventListener('blur', () => {
+        // 편집 후 콤마 다시 붙이기
+        const value = parseAmount(el.textContent);
+        el.textContent = value.toLocaleString('ko-KR');
+        if (currentUserId) {
+          members[currentUserId].balance[field] = value;
+          updateTotals();
+          updateStats();
+          debouncedSave();
+        }
+      });
+
+      el?.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          el.blur();
+        }
+      });
+    });
+
+    // 회원 삭제
+    container.querySelector('#btnDeleteMember')?.addEventListener('click', () => {
+      if (!currentUserId) return;
+      if (!confirm(`${currentUserId} 회원 데이터를 완전히 삭제하시겠습니까?\n(잔액, 히스토리 모두 삭제됩니다)`)) return;
+      delete members[currentUserId];
+      currentUserId = null;
+      container.querySelector('#payResult').style.display = 'none';
+      container.querySelector('#payEmpty').style.display = 'block';
+      container.querySelector('#paySearchInput').value = '';
+      debouncedSave();
+      updateChips();
+      updateStats();
+    });
+
+    // 히스토리 초기화
+    container.querySelector('#btnClearHistory')?.addEventListener('click', () => {
+      if (!currentUserId) return;
+      if (!confirm('이 회원의 거래 히스토리를 초기화하시겠습니까? (잔액은 유지됩니다)')) return;
+      members[currentUserId].history = [];
+      renderHistory();
+      updateStats();
+      debouncedSave();
+    });
+
+    // 금액 입력 콤마
     const amountInput = container.querySelector('#depositAmount');
     amountInput?.addEventListener('input', (e) => {
       const n = parseAmount(e.target.value);
       e.target.value = n.toLocaleString('ko-KR');
     });
 
-    // 빠른 금액 버튼
+    // 빠른 금액
     container.querySelectorAll('.pay-quick').forEach(btn => {
       btn.addEventListener('click', () => {
         const current = parseAmount(amountInput.value);
@@ -1001,99 +1371,80 @@
       btn.addEventListener('click', () => {
         container.querySelectorAll('.pay-rate').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-        if (btn.dataset.rate !== 'custom') {
-          container.querySelector('#profitRate').value = btn.dataset.rate;
-          updateProfitCalc();
-        }
+        container.querySelector('#profitRate').value = btn.dataset.rate;
+        updateProfitCalc();
       });
     });
-
-    // 수익률 직접 입력
     container.querySelector('#profitRate')?.addEventListener('input', updateProfitCalc);
 
     // 💰 원금 입금
     container.querySelector('#btnDeposit')?.addEventListener('click', () => {
+      if (!currentUserId) return alert('먼저 회원을 선택하세요.');
       const amount = parseAmount(amountInput.value);
       if (amount <= 0) return alert('금액을 입력하세요.');
       const memo = container.querySelector('#depositMemo').value;
-      if (amount >= 5000000) {
-        if (!confirm(`⚠ 큰 금액 확인\n\n${format(amount)}을 원금으로 입금하시겠습니까?\n\n사유: ${memo || '없음'}`)) return;
+      if (amount >= 10000000) {
+        if (!confirm(`⚠ 큰 금액 확인\n\n${format(amount)}을 원금으로 입금하시겠습니까?`)) return;
       }
-      principal += amount;
-      updateBalance();
-      addHistoryRow('deposit', '입금', `원금 입금 · ${memo || '메모 없음'}`, amount, principal + profit);
-      alert(`✅ ${format(amount)} 원금 입금 완료`);
+      members[currentUserId].balance.principal += amount;
+      const total = members[currentUserId].balance.principal + members[currentUserId].balance.profit;
+      container.querySelector('#balPrincipal').textContent = members[currentUserId].balance.principal.toLocaleString('ko-KR');
+      addHistory('deposit', `원금 입금 · ${memo || '메모 없음'}`, amount, total);
+      updateTotals();
       amountInput.value = '0';
+      container.querySelector('#depositMemo').value = '';
     });
 
     // 📈 광고 수익 지급
     container.querySelector('#btnProfit')?.addEventListener('click', () => {
+      if (!currentUserId) return alert('먼저 회원을 선택하세요.');
+      const principal = members[currentUserId].balance.principal;
+      if (principal <= 0) return alert('원금이 없습니다. 먼저 원금을 입금하세요.');
       const rate = parseFloat(container.querySelector('#profitRate').value) || 0;
       if (rate <= 0) return alert('수익률을 입력하세요.');
-      if (principal <= 0) return alert('원금이 없습니다.');
       const amount = Math.floor(principal * rate / 100);
       if (rate >= 100) {
-        if (!confirm(`⚠ 높은 수익률 확인\n\n수익률 ${rate}% 로 ${format(amount)} 수익을 지급하시겠습니까?`)) return;
+        if (!confirm(`⚠ 높은 수익률 확인\n\n수익률 ${rate}% 로 ${format(amount)} 지급하시겠습니까?`)) return;
       }
-      profit += amount;
-      updateBalance();
-      addHistoryRow('profit', '수익', `광고 수익 발생 (+${rate}%)`, amount, principal + profit);
-      alert(`✅ 광고 수익 ${format(amount)} 지급 완료`);
+      members[currentUserId].balance.profit += amount;
+      const total = members[currentUserId].balance.principal + members[currentUserId].balance.profit;
+      container.querySelector('#balProfit').textContent = members[currentUserId].balance.profit.toLocaleString('ko-KR');
+      addHistory('profit', `광고 수익 발생 (+${rate}%)`, amount, total);
+      updateTotals();
     });
 
-    // 💸 환급 처리
+    // 💸 환급
     container.querySelector('#btnRefund')?.addEventListener('click', () => {
+      if (!currentUserId) return alert('먼저 회원을 선택하세요.');
+      const principal = members[currentUserId].balance.principal;
+      const profit = members[currentUserId].balance.profit;
       const total = principal + profit;
       if (total <= 0) return alert('환급할 금액이 없습니다.');
-      const method = container.querySelector('#refundMethod').value;
-      const methodLabel = { bank: '계좌 이체', card: '카드 환급', cash: '현금 지급' }[method];
+      const methodLabel = { bank: '계좌 이체', card: '카드 환급', cash: '현금 지급' }[container.querySelector('#refundMethod').value];
       const memo = container.querySelector('#refundMemo').value;
-      if (!confirm(`⚠ 환급 확인\n\n${format(total)}을 ${methodLabel}로 환급하시겠습니까?\n\n원금: ${format(principal)}\n수익: ${format(profit)}\n\n사유: ${memo || '없음'}`)) return;
-      addHistoryRow('refund', '환급', `전액 환급 · ${methodLabel} · ${memo || '메모 없음'}`, total, 0, true);
-      principal = 0;
-      profit = 0;
-      updateBalance();
-      alert(`✅ ${format(total)} 환급 처리 완료`);
+      if (!confirm(`⚠ 환급 확인\n\n${format(total)}을 ${methodLabel}로 환급하시겠습니까?\n\n원금: ${format(principal)}\n수익: ${format(profit)}`)) return;
+      addHistory('refund', `${methodLabel} · ${memo || '메모 없음'}`, total, 0);
+      members[currentUserId].balance.principal = 0;
+      members[currentUserId].balance.profit = 0;
+      container.querySelector('#balPrincipal').textContent = '0';
+      container.querySelector('#balProfit').textContent = '0';
+      updateTotals();
+      container.querySelector('#refundMemo').value = '';
     });
-
-    // 히스토리 추가
-    const addHistoryRow = (type, tag, desc, amount, balance, isOut = false) => {
-      const tbody = container.querySelector('#payHistoryBody');
-      const tr = document.createElement('tr');
-      tr.dataset.type = type;
-      const now = new Date();
-      const time = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
-      tr.innerHTML = `
-        <td class="pay-hist-time">방금 전<div class="pay-hist-sub">${time}</div></td>
-        <td><span class="pay-hist-tag tag-${type}">${tag}</span></td>
-        <td class="pay-hist-desc">${desc}</td>
-        <td class="pay-hist-amount ${isOut ? 'amount-out' : 'amount-in'}">${isOut ? '-' : '+'}${format(amount)}</td>
-        <td class="pay-hist-balance">${format(balance)}</td>
-        <td class="pay-hist-op">관리자</td>
-      `;
-      tbody.insertBefore(tr, tbody.firstChild);
-    };
 
     // 히스토리 필터
     container.querySelectorAll('.pay-filter-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         container.querySelectorAll('.pay-filter-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-        const type = btn.dataset.type;
-        container.querySelectorAll('#payHistoryBody tr').forEach(row => {
-          row.style.display = (type === 'all' || row.dataset.type === type) ? '' : 'none';
-        });
+        renderHistory();
       });
     });
 
-    // 회원 칩 클릭
-    container.querySelectorAll('.pay-chip').forEach(chip => {
-      chip.addEventListener('click', () => {
-        container.querySelector('#paySearchInput').value = chip.dataset.uid;
-      });
-    });
-
-    // 초기화
-    updateBalance();
+    // ─── 초기화 ───
+    loadAll();
+    updateChips();
+    updateStats();
+    updateProfitCalc();
   })();
 </script>
