@@ -25,7 +25,7 @@ export const MENU_STRUCTURE = [
     label: '상담/문의',
     icon: '💬',
     items: [
-      { id: 'inquiries',       label: '직무 문의', page: 'inquiries' },
+      { id: 'inquiries',       label: '결제·환불 관리', page: 'inquiries' },
       { id: 'region-requests', label: '전국 만남', page: 'region-requests' },
     ],
   },
